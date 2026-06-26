@@ -333,7 +333,7 @@ def update_dhol_fields(N: ti.i32):
         p_B_past[i, j] = p_B[i, j]
         p_B[i, j] = p_B_future[i, j]
 
-def apply_acoustic_shell(membrane_signal, fs, mat_properties, note_hz, articulation, strike_force=1.0, autotune_shell=False, ring_mod=0.0):
+def apply_acoustic_shell(membrane_signal, fs, mat_properties, note_hz, articulation, strike_force=1.0, autotune_shell=False, ring_mod=0.0, body_damping=0.0):
     E_long = mat_properties.get("E_long", 10.0)
     density = mat_properties.get("density", 0.5)
     loss = max(0.0001, mat_properties.get("loss_factor", 0.02))
@@ -428,6 +428,19 @@ def apply_acoustic_shell(membrane_signal, fs, mat_properties, note_hz, articulat
             b = [np.sin(w0) / (2.0 * a0), 0.0, -np.sin(w0) / (2.0 * a0)]
             a = [1.0, -2.0 * np.cos(w0) / a0, (1.0 - alpha) / a0]
             shell_output += lfilter(b, a, membrane_signal) * g
+            
+    # === [NEW] Динамическое демпфирование телом (ADSR-огибающая поглощения) ===
+    if body_damping > 0.0:
+        t_arr = np.arange(len(shell_output)) / fs
+        
+        tail_tau = np.clip(1.5 * np.exp(-body_damping * 3.5), 0.06, 1.5)
+        tail_env = np.exp(-t_arr / tail_tau)
+        
+        attack_time = 0.012
+        attack_env = np.clip(t_arr / attack_time, 0.0, 1.0)
+        
+        damping_env = (1.0 - attack_env) + attack_env * tail_env
+        shell_output *= damping_env
         
     return shell_output
 
@@ -613,7 +626,7 @@ def declick_ar_model(sig, fs, ms_window=5.0, slew_factor=2.5, cutoff_hz=8500.0):
     # Возвращаем очищенный спектр, объединенный с оригинальным телом звука
     return lf + cleaned_hf, {"total_clicks": 1, "frames_with_clicks": 1}
 
-def generate_air_column_ir(base_shell_hz, fs=44100, duration=0.4, articulation="duum"):
+def generate_air_column_ir(base_shell_hz, fs=44100, duration=0.4, articulation="duum", body_damping=0.0):
     """
     Генерирует акустический отклик воздушного столба внутри кадушки.
     Динамически удлиняет воздушный сустейн для артикуляции chapa.
@@ -624,16 +637,16 @@ def generate_air_column_ir(base_shell_hz, fs=44100, duration=0.4, articulation="
     # Резонансные частоты воздуха
     freqs = [base_shell_hz, base_shell_hz * 2.0, base_shell_hz * 3.0]
     
-    # 1. НАСТРОЙКА ВОЗДУШНОГО СПАДА ПОД АРТИКУЛЯЦИЮ
+# 1. НАСТРОЙКА ВОЗДУШНОГО СПАДА ПОД АРТИКУЛЯЦИЮ
     if articulation == "chapa":
-        # Удлиняем спад фундаментального тона воздуха до 80 мс (вместо 32 мс).
-        # Это создаст мягкий, дышащий резонанс кадушки после шлепка.
-        decay_times = [0.100, 0.045, 0.020]  # Спад за 80 мс, 45 мс и 20 мс
-        amplitudes = [1.0, 0.55, 0.25]       # Чуть больше энергии обертонам воздуха
+        decay_times = [0.100, 0.045, 0.020]
+        amplitudes = [1.0, 0.55, 0.25]
     else:
-        # Стандартный короткий спад для остальных артикуляций
-        decay_times = [0.045, 0.018, 0.008]  # Спад за 45 мс, 18 мс и 8 мс
+        decay_times = [0.045, 0.018, 0.008]
         amplitudes = [1.0, 0.45, 0.20]
+        
+    # [NEW] Воздух также гасится, если тело закрывает кадушку
+    decay_times = [tau / (1.0 + body_damping * 3.0) for tau in decay_times]
     
     for f, tau, amp in zip(freqs, decay_times, amplitudes):
         if f < fs / 2.1:
@@ -660,7 +673,7 @@ def generate_air_column_ir(base_shell_hz, fs=44100, duration=0.4, articulation="
 
 _BODY_IR_CACHE = {}
 
-def generate_body_ir(shell_mat_dict, base_shell_hz, fs=44100, duration=0.4, articulation="duum"):
+def generate_body_ir(shell_mat_dict, base_shell_hz, fs=44100, duration=0.4, articulation="duum", body_damping=0.0):
     """
     Генерирует гибридный IR. 
     Добавлена жесткая синхронизация длины массивов для исключения ошибок округления.
@@ -715,7 +728,7 @@ def generate_body_ir(shell_mat_dict, base_shell_hz, fs=44100, duration=0.4, arti
     target_len = len(body_ir_mono) # Запоминаем точное кол-во сэмплов
     actual_duration = target_len / fs
     
-    air_ir = generate_air_column_ir(base_shell_hz, fs, actual_duration, articulation=articulation)
+    air_ir = generate_air_column_ir(base_shell_hz, fs, actual_duration, articulation=articulation, body_damping=body_damping)
     
     # --- КРИТИЧЕСКИЙ ФИКС: Жесткое выравнивание длины ---
     if len(air_ir) > target_len:
@@ -948,7 +961,8 @@ def synthesize_dhol_strike(
     body_polish_mix=0.35,
     use_bells=False,
     bell_material="steel",
-    bell_mix=0.15
+    bell_mix=0.15,
+    body_damping=0.25
 ):
     init_taichi_headless()
     if show_gui and os.environ.get('DISPLAY') is None:
@@ -1033,10 +1047,11 @@ def synthesize_dhol_strike(
     c_sq_y_B_field.from_numpy(c_y_B_map)
 
     # 5. Инициализация множителей затухания (позже переопределяются артикуляциями)
-    mult_loss_A = 0.5
-    mult_visco_A = 25.0
-    mult_loss_B = 0.5 * 0.8
-    mult_visco_B = 25.0 * 0.7
+    # [NEW] Тело барабанщика прижимает края мембраны, увеличивая потери энергии
+    mult_loss_A = 0.5 * (1.0 + body_damping * 1.5)
+    mult_visco_A = 25.0 * (1.0 + body_damping * 0.5)
+    mult_loss_B = 0.5 * 0.8 * (1.0 + body_damping * 1.5)
+    mult_visco_B = 25.0 * 0.7 * (1.0 + body_damping * 0.5)
 
     max_steps = int(duration * fs)
     fdtd_signal = np.zeros(max_steps)
@@ -1201,13 +1216,13 @@ def synthesize_dhol_strike(
         round(shell_mat.get("density", 0.5), 3), 
         round(shell_mat.get("loss_factor", 0.02), 4)
     )
-    cache_key = (mat_hash, round(base_shell, 1), fs, articulation)
+    cache_key = (mat_hash, round(base_shell, 1), fs, articulation, round(body_damping, 2))
     
     global _BODY_IR_CACHE
     if cache_key in _BODY_IR_CACHE:
         body_ir = _BODY_IR_CACHE[cache_key]
     else:
-        body_ir = generate_body_ir(shell_mat, base_shell_hz=base_shell, fs=fs, articulation=articulation)
+        body_ir = generate_body_ir(shell_mat, base_shell_hz=base_shell, fs=fs, articulation=articulation, body_damping=body_damping)
         _BODY_IR_CACHE[cache_key] = body_ir
     # ==========================================
 
@@ -1588,7 +1603,8 @@ def synthesize_dhol_strike(
     shell_signal = apply_acoustic_shell(
         padded_signal, fs, shell_mat, shell_freq, articulation, strike_force, 
         autotune_shell=autotune_shell,
-        ring_mod=ring_mod
+        ring_mod=ring_mod,
+        body_damping=body_damping
     )
     
     shell_delay = int(0.00008 * fs)

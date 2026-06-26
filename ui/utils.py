@@ -11,4 +11,22 @@ def build_category_dict(db, cat_ref=None):
     for cat in categories:
         categories[cat] = sorted(categories[cat], key=lambda x: x[1])
     return dict(sorted(categories.items()))
+
+
+def format_material_display(key, db):
+    """Форматирует один материал: 'Русское название [key]'"""
+    data = db.get(key, {})
+    return f"{data.get('name', key)} [{key}]"
+
+
+def format_material_list(db):
+    """Формирует список для Combobox в формате 'Русское название [key]'"""
+    return [f"{data['name']} [{k}]" for k, data in db.items()]
+
+
+def extract_key_from_display(display_str):
+    """Извлекает ключ материала из отображаемой строки 'Название [key]'"""
+    if "[" in display_str and "]" in display_str:
+        return display_str.split("[")[1].rstrip("]").strip()
+    return display_str.strip()
 # --- END OF FILE ui/utils.py ---

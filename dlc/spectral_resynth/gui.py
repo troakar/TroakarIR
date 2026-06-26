@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 from tkinterdnd2 import DND_FILES
 from config.materials import MATERIAL_PHYSICS
+from ui.utils import format_material_display, format_material_list, extract_key_from_display
 
 from .engine import process_hybrid_material, play_preview, stop_preview, batch_process
 
@@ -62,14 +63,14 @@ class SpectralResynthTab(ttk.Frame):
         mat_group.columnconfigure(0, weight=1)
 
         ttk.Label(mat_group, text="Материал А (База):").grid(row=0, column=0, sticky="w")
-        self.cb_mat_a = ttk.Combobox(mat_group, values=list(MATERIAL_PHYSICS.keys()), state="readonly")
+        self.cb_mat_a = ttk.Combobox(mat_group, values=format_material_list(MATERIAL_PHYSICS), state="readonly")
         self.cb_mat_a.grid(row=1, column=0, pady=2, sticky="ew")
-        self.cb_mat_a.set("pomor_bog_pine")
+        self.cb_mat_a.set(format_material_display("pomor_bog_pine", MATERIAL_PHYSICS))
 
         ttk.Label(mat_group, text="Материал Б (Примесь):").grid(row=2, column=0, sticky="w")
-        self.cb_mat_b = ttk.Combobox(mat_group, values=list(MATERIAL_PHYSICS.keys()), state="readonly")
+        self.cb_mat_b = ttk.Combobox(mat_group, values=format_material_list(MATERIAL_PHYSICS), state="readonly")
         self.cb_mat_b.grid(row=3, column=0, pady=2, sticky="ew")
-        self.cb_mat_b.set("meteoric_iron")
+        self.cb_mat_b.set(format_material_display("meteoric_iron", MATERIAL_PHYSICS))
 
         ttk.Label(mat_group, text="Blend Ratio (A <-> B):").grid(row=4, column=0, sticky="w")
         self.sl_blend = tk.Scale(mat_group, from_=0, to=100, orient=tk.HORIZONTAL, resolution=1, showvalue=True, highlightthickness=0)
@@ -145,8 +146,8 @@ class SpectralResynthTab(ttk.Frame):
         if not selection: return
         row = selection[0]
         
-        mat_a = self.cb_mat_a.get()
-        mat_b = self.cb_mat_b.get()
+        mat_a = extract_key_from_display(self.cb_mat_a.get())
+        mat_b = extract_key_from_display(self.cb_mat_b.get())
         blend = self.sl_blend.get() / 100.0
         mode = self.mode_var.get()
         force = self.sl_force.get() / 100.0
@@ -168,8 +169,8 @@ class SpectralResynthTab(ttk.Frame):
         out_dir = filedialog.askdirectory(title="Куда сохранить артефакты?")
         if not out_dir: return
         
-        mat_a = self.cb_mat_a.get()
-        mat_b = self.cb_mat_b.get()
+        mat_a = extract_key_from_display(self.cb_mat_a.get())
+        mat_b = extract_key_from_display(self.cb_mat_b.get())
         blend = self.sl_blend.get() / 100.0
         mode = self.mode_var.get()
         force = self.sl_force.get() / 100.0

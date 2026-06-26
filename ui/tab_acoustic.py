@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 from config.materials import MATERIAL_PHYSICS, MATERIAL_CATEGORIES
 from config.instruments import RESONATOR_TEMPLATES, INSTRUMENT_PRESETS, INSTRUMENT_CATEGORIES
 from engine.core_dsp import generate_physical_ir
-from ui.utils import build_category_dict
+from ui.utils import build_category_dict, extract_key_from_display
 
 class AcousticTab(ttk.Frame):
     def __init__(self, parent, status_var):
@@ -26,7 +26,7 @@ class AcousticTab(ttk.Frame):
         self.inst_var = tk.StringVar()
         self.inst_combo = ttk.Combobox(self, textvariable=self.inst_var, state="readonly")
         self.inst_categories = build_category_dict(INSTRUMENT_PRESETS, INSTRUMENT_CATEGORIES)
-        self.inst_combo['values'] = [f"{k} ({name})" for cat, items in self.inst_categories.items() for k, name in items]
+        self.inst_combo['values'] = [f"{name} [{k}]" for cat, items in self.inst_categories.items() for k, name in items]
         self.inst_combo.current(0)
         self.inst_combo.grid(row=1, column=0, columnspan=2, sticky="ew", pady=(0, 5))
         
@@ -37,7 +37,7 @@ class AcousticTab(ttk.Frame):
         self.mat_var = tk.StringVar()
         self.mat_combo = ttk.Combobox(self, textvariable=self.mat_var, state="readonly")
         self.mat_categories = build_category_dict(MATERIAL_PHYSICS, MATERIAL_CATEGORIES)
-        self.mat_combo['values'] = [f"{k} ({name})" for cat, items in self.mat_categories.items() for k, name in items]
+        self.mat_combo['values'] = [f"{name} [{k}]" for cat, items in self.mat_categories.items() for k, name in items]
         self.mat_combo.current(0)
         self.mat_combo.grid(row=4, column=0, columnspan=2, sticky="ew", pady=(0, 5))
         
@@ -80,14 +80,14 @@ class AcousticTab(ttk.Frame):
         self.update_labels()
 
     def update_desc(self):
-        inst_key = self.inst_var.get().split(" ")[0].strip()
-        mat_key = self.mat_var.get().split(" ")[0].strip()
+        inst_key = extract_key_from_display(self.inst_var.get())
+        mat_key = extract_key_from_display(self.mat_var.get())
         self.inst_desc_label.config(text=INSTRUMENT_PRESETS[inst_key].get("description", ""))
         self.mat_desc_label.config(text=MATERIAL_PHYSICS[mat_key].get("description", ""))
 
     def update_labels(self, *args):
         # 1. Считаем физический размер
-        inst_key = self.inst_var.get().split(" ")[0].strip()
+        inst_key = extract_key_from_display(self.inst_var.get())
         inst = INSTRUMENT_PRESETS[inst_key]
         template = RESONATOR_TEMPLATES[inst["resonator_template"]]
         scale = self.scale_var.get()
@@ -124,8 +124,8 @@ class AcousticTab(ttk.Frame):
 
 
     def generate(self):
-        inst_key = self.inst_var.get().split(" ")[0].strip()
-        mat_key = self.mat_var.get().split(" ")[0].strip()
+        inst_key = extract_key_from_display(self.inst_var.get())
+        mat_key = extract_key_from_display(self.mat_var.get())
         scale = self.scale_var.get()
         duration = self.dur_var.get()
         mic_dist = float(self.mic_var.get())

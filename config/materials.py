@@ -207,10 +207,15 @@ MATERIAL_PHYSICS = {
         "category": "polymer",
         "name": "Майлар уплотненный",
         "description": "Более плотная версия ПЭТ-мембраны (0.35 мм). Увеличивает сустейн низких частот и плотность удара.",
-        "density": 1.39, "E_long": 4.5, "E_trans": 4.5, "poisson": 0.38,
-        "loss_factor": 0.014, "visco_gamma": 8.0e-6, "base_thickness": 0.00035,
+        "density": 1.39, 
+        "E_long": 4.5, 
+        "E_trans": 4.2,  
+        "poisson": 0.38,
+        "loss_factor": 0.028, 
+        "visco_gamma": 3.5e-5, 
+        "base_thickness": 0.00035,
         "granular": {"enabled": False}, "fibrous": {"enabled": False}, "fluid": {"enabled": False},
-        "tactile_profile": {"fibrousness": 0.0, "fluidity": 0.0, "granularity": 0.0, "brittleness": 0.0},
+        "tactile_profile": {"fibrousness": 0.0, "fluidity": 0.0, "granularity": 0.0, "brittleness": 0.08},
         "inclusions": []
     },
     "kevlar_snare_head": {

@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 from config.materials import MATERIAL_PHYSICS, MATERIAL_CATEGORIES
 from config.instruments import PERCUSSION_PRESETS, PERCUSSION_CATEGORIES
 from engine.core_drums import generate_drum_ir
-from ui.utils import build_category_dict
+from ui.utils import build_category_dict, extract_key_from_display
 
 class PercussionTab(ttk.Frame):
     def __init__(self, parent, status_var):
@@ -26,7 +26,7 @@ class PercussionTab(ttk.Frame):
         self.inst_var = tk.StringVar()
         self.inst_combo = ttk.Combobox(self, textvariable=self.inst_var, state="readonly")
         self.inst_categories = build_category_dict(PERCUSSION_PRESETS, PERCUSSION_CATEGORIES)
-        self.inst_combo['values'] = [f"{k} ({name})" for cat, items in self.inst_categories.items() for k, name in items]
+        self.inst_combo['values'] = [f"{name} [{k}]" for cat, items in self.inst_categories.items() for k, name in items]
         self.inst_combo.current(0)
         self.inst_combo.grid(row=1, column=0, columnspan=2, sticky="ew", pady=(0, 5))
         
@@ -36,21 +36,21 @@ class PercussionTab(ttk.Frame):
         ttk.Label(self, text="Материал оболочки:", font=("Arial", 10, "bold")).grid(row=3, column=0, columnspan=2, sticky="w", pady=(0, 5))
         self.shell_var = tk.StringVar()
         self.shell_combo = ttk.Combobox(self, textvariable=self.shell_var, state="readonly")
-        self.shell_combo['values'] = [f"{k} ({name})" for cat, items in build_category_dict(MATERIAL_PHYSICS, MATERIAL_CATEGORIES).items() for k, name in items]
+        self.shell_combo['values'] = [f"{name} [{k}]" for cat, items in build_category_dict(MATERIAL_PHYSICS, MATERIAL_CATEGORIES).items() for k, name in items]
         self.shell_combo.current(0)
         self.shell_combo.grid(row=4, column=0, columnspan=2, sticky="ew", pady=(0, 5))
         
         ttk.Label(self, text="Материал мембраны / рамы:", font=("Arial", 10, "bold")).grid(row=5, column=0, columnspan=2, sticky="w", pady=(0, 5))
         self.head_var = tk.StringVar()
         self.head_combo = ttk.Combobox(self, textvariable=self.head_var, state="readonly")
-        self.head_combo['values'] = [f"{k} ({name})" for cat, items in build_category_dict(MATERIAL_PHYSICS, MATERIAL_CATEGORIES).items() for k, name in items]
+        self.head_combo['values'] = [f"{name} [{k}]" for cat, items in build_category_dict(MATERIAL_PHYSICS, MATERIAL_CATEGORIES).items() for k, name in items]
         self.head_combo.current(1)
         self.head_combo.grid(row=6, column=0, columnspan=2, sticky="ew", pady=(0, 5))
         
         ttk.Label(self, text="Материал проволоки / тарелки:", font=("Arial", 10, "bold")).grid(row=7, column=0, columnspan=2, sticky="w", pady=(0, 5))
         self.wire_var = tk.StringVar()
         self.wire_combo = ttk.Combobox(self, textvariable=self.wire_var, state="readonly")
-        self.wire_combo['values'] = [f"{k} ({name})" for cat, items in build_category_dict(MATERIAL_PHYSICS, MATERIAL_CATEGORIES).items() for k, name in items]
+        self.wire_combo['values'] = [f"{name} [{k}]" for cat, items in build_category_dict(MATERIAL_PHYSICS, MATERIAL_CATEGORIES).items() for k, name in items]
         self.wire_combo.current(2)
         self.wire_combo.grid(row=8, column=0, columnspan=2, sticky="ew", pady=(0, 5))
 
@@ -74,14 +74,14 @@ class PercussionTab(ttk.Frame):
         self.update_desc()
 
     def update_desc(self):
-        inst_key = self.inst_var.get().split(" ")[0].strip()
+        inst_key = extract_key_from_display(self.inst_var.get())
         self.inst_desc_label.config(text=PERCUSSION_PRESETS[inst_key].get("description", ""))
 
     def generate(self):
-        inst_key = self.inst_var.get().split(" ")[0].strip()
-        shell_key = self.shell_var.get().split(" ")[0].strip()
-        head_key = self.head_var.get().split(" ")[0].strip()
-        wire_key = self.wire_var.get().split(" ")[0].strip()
+        inst_key = extract_key_from_display(self.inst_var.get())
+        shell_key = extract_key_from_display(self.shell_var.get())
+        head_key = extract_key_from_display(self.head_var.get())
+        wire_key = extract_key_from_display(self.wire_var.get())
         scale = self.scale_var.get()
         duration = self.dur_var.get()
         add_snare = self.snare_var.get()

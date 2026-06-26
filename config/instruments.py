@@ -261,6 +261,18 @@ INSTRUMENT_PRESETS = {
         "category": "industrial_horror", "name": "Разбитое стекло (Shattered)", "resonator_template": "isotropic_plate", "mask_image": "broken glass.png", 
         "body_depth": 0.05, "low_cut": 300.0, "bridge_hill": 8000.0, "f0": 1000.0, "sympathetic_strings": []
     },
+    "darbuka_shell": {
+        "category": "drums", 
+        "name": "Кубок Дарбуки", 
+        "resonator_template": "drum_shell", 
+        "mask_image": "Drum.png", 
+        "size_m": 0.25, 
+        "body_depth": 0.35, 
+        "low_cut": 60.0, 
+        "bridge_hill": 2500.0, 
+        "f0": 200.0, 
+        "sympathetic_strings": []
+    },
     # --- Лабораторные ---
     "perfect_lab_medium": {"category": "lab_testing", "name": "Шумовой сканер материала", "resonator_template": "ideal_medium", "body_depth": 0.05, "low_cut": 15.0, "bridge_hill": 6000.0, "f0": 100.0, "sympathetic_strings": []}
 }

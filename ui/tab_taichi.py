@@ -14,7 +14,7 @@ from engine.geometry import generate_instrument_mask, get_strike_point, get_pick
 from engine.grid_builder import build_heterogeneous_grids, get_heterogeneous_material_description
 
 try:
-    from ui.utils import build_category_dict
+    from ui.utils import build_category_dict, extract_key_from_display
 except ImportError:
     def build_category_dict(presets, categories):
         result = {cat_id: [] for cat_id in categories}
@@ -27,6 +27,10 @@ except ImportError:
                     result["other"] = []
                 result["other"].append((key, preset.get("name", key)))
         return {k: v for k, v in result.items() if v}
+    def extract_key_from_display(display_str):
+        if "[" in display_str and "]" in display_str:
+            return display_str.split("[")[1].rstrip("]").strip()
+        return display_str.strip()
 
 ALL_PRESETS = {**INSTRUMENT_PRESETS, **PERCUSSION_PRESETS}
 ALL_CATEGORIES = {**INSTRUMENT_CATEGORIES, **PERCUSSION_CATEGORIES}
@@ -64,6 +68,10 @@ class TaichiTab(ttk.Frame):
         
         self.build_ui()
         
+    def _key(self, var_str):
+        """Извлекает ключ из строки combobox (поддерживает оба формата)."""
+        return extract_key_from_display(var_str)
+
     def build_ui(self):
         # Создаем изолированные контейнеры-панели
         left_panel = ttk.Frame(self, padding=(0, 0, 15, 0))
@@ -86,7 +94,7 @@ class TaichiTab(ttk.Frame):
         self.inst_var = tk.StringVar()
         self.inst_combo = ttk.Combobox(left_panel, textvariable=self.inst_var, state="readonly")
         preset_dict = build_category_dict(ALL_PRESETS, ALL_CATEGORIES)
-        self.inst_combo['values'] = [f"{k} ({name})" for cat, items in preset_dict.items() for k, name in items]
+        self.inst_combo['values'] = [f"{name} [{k}]" for cat, items in preset_dict.items() for k, name in items]
         self.inst_combo.current(0)
         self.inst_combo.grid(row=0, column=1, sticky="ew", pady=(5, 2))
         self.inst_combo.bind("<<ComboboxSelected>>", self.on_preset_change)
@@ -95,7 +103,7 @@ class TaichiTab(ttk.Frame):
         ttk.Label(left_panel, text="Материал Матрицы А:", font=("Arial", 10, "bold")).grid(row=1, column=0, sticky="w", pady=(5, 2))
         self.mat_var = tk.StringVar()
         self.mat_combo = ttk.Combobox(left_panel, textvariable=self.mat_var, state="readonly")
-        all_mats = [f"{k} ({name})" for cat, items in build_category_dict(MATERIAL_PHYSICS, MATERIAL_CATEGORIES).items() for k, name in items]
+        all_mats = [f"{name} [{k}]" for cat, items in build_category_dict(MATERIAL_PHYSICS, MATERIAL_CATEGORIES).items() for k, name in items]
         self.mat_combo['values'] = all_mats
         self.mat_combo.current(0)
         self.mat_combo.grid(row=1, column=1, sticky="ew", pady=(5, 2))
@@ -340,7 +348,7 @@ class TaichiTab(ttk.Frame):
         self.update_labels()
 
     def update_preview(self):
-        inst_key = self.inst_var.get().split(" ")[0].strip()
+        inst_key = self._key(self.inst_var.get())
         inst = ALL_PRESETS[inst_key]
         
         mask_np = generate_instrument_mask(inst, 128)
@@ -382,14 +390,14 @@ class TaichiTab(ttk.Frame):
         self.update_optical_mask()
     
     def update_optical_mask(self):
-        inst_key = self.inst_var.get().split(" ")[0].strip()
-        mat_key = self.mat_var.get().split(" ")[0].strip()
+        inst_key = self._key(self.inst_var.get())
+        mat_key = self._key(self.mat_var.get())
         
         inst = ALL_PRESETS[inst_key]
         mat = MATERIAL_PHYSICS[mat_key]
         
         if self.use_alloy_var.get() and self.mat2_var.get():
-            mat2_key = self.mat2_var.get().split(" ")[0].strip()
+            mat2_key = self._key(self.mat2_var.get())
             mat2 = MATERIAL_PHYSICS.get(mat2_key, mat)
             mat = blend_materials(mat, mat2, self.alloy_ratio_var.get())
             
@@ -427,11 +435,11 @@ class TaichiTab(ttk.Frame):
         self.mask_canvas.create_image(0, 0, image=self.mask_photo, anchor="nw")
     
     def update_labels(self, *args):
-        mat_key = self.mat_var.get().split(" ")[0].strip()
+        mat_key = self._key(self.mat_var.get())
         mat = MATERIAL_PHYSICS[mat_key]
         
         if self.use_alloy_var.get() and self.mat2_var.get():
-            mat2_key = self.mat2_var.get().split(" ")[0].strip()
+            mat2_key = self._key(self.mat2_var.get())
             mat2 = MATERIAL_PHYSICS.get(mat2_key, mat)
             mat = blend_materials(mat, mat2, self.alloy_ratio_var.get())
             
@@ -444,7 +452,7 @@ class TaichiTab(ttk.Frame):
         desc_text = re.sub(r'<[^>]+>', '', desc_text)
         self.mat_desc_label.config(text=desc_text)
         
-        inst_key = self.inst_var.get().split(" ")[0].strip()
+        inst_key = self._key(self.inst_var.get())
         inst = ALL_PRESETS[inst_key]
         base_size_m = inst.get("size_m", 0.4)
         self._last_inst = inst
@@ -497,7 +505,7 @@ class TaichiTab(ttk.Frame):
             inst = self._last_inst
             scale = self._last_scale
         else:
-            inst_key = self.inst_var.get().split(" ")[0].strip()
+            inst_key = self._key(self.inst_var.get())
             inst = ALL_PRESETS[inst_key]
             scale = self.scale_var.get()
             self._last_inst = inst
@@ -533,7 +541,7 @@ class TaichiTab(ttk.Frame):
             
     def _update_resonance_display_delayed(self):
         self._resonance_display_pending = False
-        inst_key = self.inst_var.get().split(" ")[0].strip()
+        inst_key = self._key(self.inst_var.get())
         inst = ALL_PRESETS[inst_key]
         scale = self.scale_var.get()
         self._last_inst = inst
@@ -565,7 +573,7 @@ class TaichiTab(ttk.Frame):
             pass
             
     def on_target_note_changed(self, event=None):
-        inst_key = self.inst_var.get().split(" ")[0].strip()
+        inst_key = self._key(self.inst_var.get())
         inst = ALL_PRESETS[inst_key]
         base_A0 = inst.get("A0", None)
         base_f0 = inst.get("f0", None)
@@ -612,8 +620,8 @@ class TaichiTab(ttk.Frame):
             self.update_resonance_display()
         
     def generate(self):
-        inst_key = self.inst_var.get().split(" ")[0].strip()
-        mat_key = self.mat_var.get().split(" ")[0].strip()
+        inst_key = self._key(self.inst_var.get())
+        mat_key = self._key(self.mat_var.get())
         scale = self.scale_var.get()
         duration = self.dur_var.get()
         mat_boost = self.mat_boost_var.get()
@@ -635,7 +643,7 @@ class TaichiTab(ttk.Frame):
         mat = MATERIAL_PHYSICS[mat_key]
         
         if use_alloy:
-            mat2_key = self.mat2_var.get().split(" ")[0].strip()
+            mat2_key = self._key(self.mat2_var.get())
             mat2 = MATERIAL_PHYSICS[mat2_key]
             mat = blend_materials(mat, mat2, self.alloy_ratio_var.get())
         
@@ -671,8 +679,8 @@ class TaichiTab(ttk.Frame):
             messagebox.showerror("Сбой", str(e))
 
     def generate_texture(self):
-        inst_key = self.inst_var.get().split(" ")[0].strip()
-        mat_key = self.mat_var.get().split(" ")[0].strip()
+        inst_key = self._key(self.inst_var.get())
+        mat_key = self._key(self.mat_var.get())
         scale = self.scale_var.get()
         duration = self.dur_var.get()
         mat_boost = self.mat_boost_var.get()
@@ -697,7 +705,7 @@ class TaichiTab(ttk.Frame):
         mat = MATERIAL_PHYSICS[mat_key]
         
         if use_alloy:
-            mat2_key = self.mat2_var.get().split(" ")[0].strip()
+            mat2_key = self._key(self.mat2_var.get())
             mat2 = MATERIAL_PHYSICS[mat2_key]
             mat = blend_materials(mat, mat2, self.alloy_ratio_var.get())
         

@@ -9,6 +9,7 @@ import logging
 from dhol_engine import synthesize_dhol_strike, note_to_frequency
 from config.materials import MATERIAL_PHYSICS
 from dlc.dhol.dhol_packer_gui import DholPackerFrame
+from ui.utils import format_material_display, format_material_list, extract_key_from_display
 
 logger = logging.getLogger("TheHall.GUI")
 
@@ -80,17 +81,17 @@ class DholDLCFrame(ttk.Notebook):
         material_group = ttk.LabelFrame(tab_core, text=" Физика материалов (Troakar Integration) ", padding="6")
         material_group.pack(fill=tk.X, pady=2)
 
-        self.mat_list = sorted(list(MATERIAL_PHYSICS.keys()))
+        self.mat_list = format_material_list(MATERIAL_PHYSICS)
 
         ttk.Label(material_group, text="Материал мембран (Кожа):").grid(row=0, column=0, sticky=tk.W, padx=4, pady=2)
-        self.skin_mat_var = tk.StringVar(value="animal_skin")
-        self.skin_selector = ttk.Combobox(material_group, textvariable=self.skin_mat_var, values=self.mat_list, state="readonly", width=18)
+        self.skin_mat_var = tk.StringVar(value=format_material_display("animal_skin", MATERIAL_PHYSICS))
+        self.skin_selector = ttk.Combobox(material_group, textvariable=self.skin_mat_var, values=self.mat_list, state="readonly", width=28)
         self.skin_selector.grid(row=0, column=1, padx=4, pady=2, sticky=tk.W)
         self.skin_selector.bind("<<ComboboxSelected>>", self.update_material_descriptions)
 
         ttk.Label(material_group, text="Материал кадушки (Корпус):").grid(row=1, column=0, sticky=tk.W, padx=4, pady=2)
-        self.shell_mat_var = tk.StringVar(value="walnut")
-        self.shell_selector = ttk.Combobox(material_group, textvariable=self.shell_mat_var, values=self.mat_list, state="readonly", width=18)
+        self.shell_mat_var = tk.StringVar(value=format_material_display("walnut", MATERIAL_PHYSICS))
+        self.shell_selector = ttk.Combobox(material_group, textvariable=self.shell_mat_var, values=self.mat_list, state="readonly", width=28)
         self.shell_selector.grid(row=1, column=1, padx=4, pady=2, sticky=tk.W)
         self.shell_selector.bind("<<ComboboxSelected>>", self.update_material_descriptions)
 
@@ -189,6 +190,14 @@ class DholDLCFrame(ttk.Notebook):
         self.ring_mod_val_lbl = ttk.Label(shell_grid, text="0.00x", width=6, anchor=tk.E)
         self.ring_mod_val_lbl.grid(row=2, column=2, sticky=tk.E, padx=4, pady=2)
 
+        # Body Damping
+        self.body_damping_var = tk.DoubleVar(value=0.25)
+        ttk.Label(shell_grid, text="Body Damping:", font=("Helvetica", 8, "bold")).grid(row=3, column=0, sticky=tk.W, padx=4, pady=2)
+        self.body_damping_scale = ttk.Scale(shell_grid, from_=0.0, to=1.0, variable=self.body_damping_var, orient="horizontal", command=lambda v: self.update_slider_label("body_damping"))
+        self.body_damping_scale.grid(row=3, column=1, sticky=tk.EW, padx=4, pady=2)
+        self.body_damping_val_lbl = ttk.Label(shell_grid, text="0.25x", width=6, anchor=tk.E)
+        self.body_damping_val_lbl.grid(row=3, column=2, sticky=tk.E, padx=4, pady=2)
+
         # Чекбокс автотюна
         self.autotune_shell_var = tk.BooleanVar(value=False)
         self.autotune_shell_cb = ttk.Checkbutton(
@@ -220,12 +229,12 @@ class DholDLCFrame(ttk.Notebook):
 
         # Выбор сплава
         ttk.Label(self.bells_params_frame, text="Сплав металла:").grid(row=0, column=0, sticky=tk.W, padx=4, pady=3)
-        metal_materials = [k for k, v in MATERIAL_PHYSICS.items() if v.get("category") == "metal"]
+        metal_materials = [format_material_display(k, MATERIAL_PHYSICS) for k, v in MATERIAL_PHYSICS.items() if v.get("category") == "metal"]
         if not metal_materials:
             metal_materials = self.mat_list
             
-        self.bell_mat_var = tk.StringVar(value="steel")
-        self.bell_selector = ttk.Combobox(self.bells_params_frame, textvariable=self.bell_mat_var, values=metal_materials, state="readonly", width=15)
+        self.bell_mat_var = tk.StringVar(value=format_material_display("steel", MATERIAL_PHYSICS))
+        self.bell_selector = ttk.Combobox(self.bells_params_frame, textvariable=self.bell_mat_var, values=metal_materials, state="readonly", width=25)
         self.bell_selector.grid(row=0, column=1, sticky=tk.W, padx=4, pady=3)
 
         # Mix колокольчиков
@@ -370,6 +379,8 @@ class DholDLCFrame(ttk.Notebook):
             self.shell_sustain_val_lbl.config(text=f"{self.shell_sustain_var.get():.2f}x")
         if name in ["all", "ring_mod"]:
             self.ring_mod_val_lbl.config(text=f"{self.ring_mod_var.get():.2f}x")
+        if name in ["all", "body_damping"]:
+            self.body_damping_val_lbl.config(text=f"{self.body_damping_var.get():.2f}x")
         if name in ["all", "bell_mix"]:
             self.bell_mix_val_lbl.config(text=f"{self.bell_mix_var.get():.2f}x")
 
@@ -391,7 +402,7 @@ class DholDLCFrame(ttk.Notebook):
     def _resolve_material_key(self, selected_value):
         if selected_value in MATERIAL_PHYSICS:
             return selected_value
-        return selected_value.split(" ")[0].strip()
+        return extract_key_from_display(selected_value)
 
     def update_material_descriptions(self, event=None):
         skin_key = self._resolve_material_key(self.skin_mat_var.get())
@@ -679,7 +690,8 @@ class DholDLCFrame(ttk.Notebook):
                                 show_gui=True,
                                 use_bells=self.use_bells_var.get(),
                                 bell_material=self._resolve_material_key(self.bell_mat_var.get()),
-                                bell_mix=self.bell_mix_var.get()
+                                bell_mix=self.bell_mix_var.get(),
+                                body_damping=self.body_damping_var.get()
                             )
                             
                             assigned_note = note_A if art in ["open_bass", "duum", "chapa", "mute", "bass_slide", "tek_A"] else note_B
@@ -715,7 +727,8 @@ class DholDLCFrame(ttk.Notebook):
                     show_gui=True,
                     use_bells=self.use_bells_var.get(),
                     bell_material=self._resolve_material_key(self.bell_mat_var.get()),
-                    bell_mix=self.bell_mix_var.get()
+                    bell_mix=self.bell_mix_var.get(),
+                    body_damping=self.body_damping_var.get()
                 )
                 
                 assigned_note = note_A if test_art in ["open_bass", "duum", "chapa", "mute", "bass_slide", "tek_A"] else note_B

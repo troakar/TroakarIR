@@ -8,6 +8,7 @@ import logging
 
 from .drums_engine import synthesize_drum_hit
 from config.materials import MATERIAL_PHYSICS
+from ui.utils import format_material_display, format_material_list, extract_key_from_display
 
 logger = logging.getLogger("Troakar.DrumsGUI")
 
@@ -17,7 +18,7 @@ class DrumsDLCFrame(ttk.Notebook):
         self.main_app = main_app_ref
         self.is_rendering = False
         self.abort_current_render = False  # Флаг для прерывания рендера
-        self.mat_list = sorted(list(MATERIAL_PHYSICS.keys()))
+        self.mat_list = format_material_list(MATERIAL_PHYSICS)
 
         self.tab_builder = ttk.Frame(self, padding="6")
         self.tab_physics = ttk.Frame(self, padding="6")
@@ -119,18 +120,18 @@ class DrumsDLCFrame(ttk.Notebook):
         mat_frame.pack(fill=tk.X, pady=4)
 
         ttk.Label(mat_frame, text="Пластик (Heads):").grid(row=0, column=0, sticky=tk.W, padx=4)
-        self.head_mat = ttk.Combobox(mat_frame, values=self.mat_list, state="readonly", width=20)
-        self.head_mat.set("animal_skin")
+        self.head_mat = ttk.Combobox(mat_frame, values=self.mat_list, state="readonly", width=30)
+        self.head_mat.set(format_material_display("animal_skin", MATERIAL_PHYSICS))
         self.head_mat.grid(row=0, column=1, padx=4, pady=2)
 
         ttk.Label(mat_frame, text="Кадушка (Shells):").grid(row=1, column=0, sticky=tk.W, padx=4)
-        self.shell_mat = ttk.Combobox(mat_frame, values=self.mat_list, state="readonly", width=20)
-        self.shell_mat.set("maple")
+        self.shell_mat = ttk.Combobox(mat_frame, values=self.mat_list, state="readonly", width=30)
+        self.shell_mat.set(format_material_display("maple", MATERIAL_PHYSICS))
         self.shell_mat.grid(row=1, column=1, padx=4, pady=2)
 
         ttk.Label(mat_frame, text="Тарелки (Cymbals):").grid(row=2, column=0, sticky=tk.W, padx=4)
-        self.cym_mat = ttk.Combobox(mat_frame, values=self.mat_list, state="readonly", width=20)
-        self.cym_mat.set("bronze")
+        self.cym_mat = ttk.Combobox(mat_frame, values=self.mat_list, state="readonly", width=30)
+        self.cym_mat.set(format_material_display("bronze", MATERIAL_PHYSICS))
         self.cym_mat.grid(row=2, column=1, padx=4, pady=2)
 
         tweak_frame = ttk.LabelFrame(self.tab_physics, text=" Глобальный Твикинг ", padding="6")
@@ -189,9 +190,9 @@ class DrumsDLCFrame(ttk.Notebook):
                 note=note,
                 beater_type=beater,
                 strike_force=1.0,
-                head_mat_name=self.head_mat.get(),
-                shell_mat_name=self.shell_mat.get(),
-                cym_mat_name=self.cym_mat.get(),
+                head_mat_name=extract_key_from_display(self.head_mat.get()),
+                shell_mat_name=extract_key_from_display(self.shell_mat.get()),
+                cym_mat_name=extract_key_from_display(self.cym_mat.get()),
                 shell_depth_inches=depth,
                 muffling=self.muff_scale.get(),
                 tactile_boost=self.tactile_scale.get(),
@@ -292,9 +293,9 @@ class DrumsDLCFrame(ttk.Notebook):
                             note=note,
                             beater_type=beater,
                             strike_force=force,
-                            head_mat_name=self.head_mat.get(),
-                            shell_mat_name=self.shell_mat.get(),
-                            cym_mat_name=self.cym_mat.get(),
+                            head_mat_name=extract_key_from_display(self.head_mat.get()),
+                            shell_mat_name=extract_key_from_display(self.shell_mat.get()),
+                            cym_mat_name=extract_key_from_display(self.cym_mat.get()),
                             shell_depth_inches=depth,
                             muffling=self.muff_scale.get(),
                             tactile_boost=self.tactile_scale.get(),
