@@ -1,0 +1,15 @@
+schema_version: 1
+module_path: error_handling
+title: Error Handling — Logging-Based Exception Management with Graceful Degradation
+scope: []
+source_files:
+    - main.py
+    - engine/core_logging.py
+    - dlc_loader.py
+    - ui/tab_acoustic.py
+    - ui/tab_percussion.py
+    - dlc/Drums/drums_gui.py
+    - config/materials.py
+    - dhol_engine.py
+depends_on: []
+related_to: []

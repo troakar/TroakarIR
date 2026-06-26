@@ -768,11 +768,15 @@ def apply_body_convolution(input_signal, ir_signal, fs, mix=0.35):
     return output
 
 def apply_internal_bells(membrane_signal, acceleration_signal, fs, material_name="brass", 
-                         mix=0.15, rr_index=1, strike_force=1.0):
+                         mix=0.15, rr_index=1, strike_force=1.0, bell_peak_ratio=1.0):
     """
     МАКСИМАЛЬНО ЖИВАЯ МОДЕЛЬ КОЛОКОЛЬЧИКОВ.
     Сбалансированная: жесткий transient-gate защищает атаку «Тэка», 
     а сдвинутые вверх фильтры HPF предотвращают эффект тамбурина.
+
+    bell_peak_ratio : float
+        Максимально допустимое отношение пиковой амплитуды колокольчиков к пиковой амплитуде тела.
+        1.0 = колокольчики не превышают уровень основного сигнала.
     """
     from config.materials import MATERIAL_PHYSICS
     
@@ -893,11 +897,11 @@ def apply_internal_bells(membrane_signal, acceleration_signal, fs, material_name
 
     # --- СВЕДЕНИЕ И ПОСТ-ОБРАБОТКА СЛОЁВ ---
     nyquist = fs / 2.0
-    
+
     # 1. Спектральная чистка основных колоколов (СДВИГ HPF ВВЕРХ с 1800 до 2500 Гц)
     b_hp, a_hp = butter(2, 2500.0 / nyquist, btype='high')
     bell_output = lfilter(b_hp, a_hp, bell_output)
-    
+
     lp_cutoff = 2200.0 + 15000.0 * (kinetic_energy ** 0.8) * (0.4 + 0.6 * mix)
     lp_cutoff = np.clip(lp_cutoff, 2000.0, nyquist - 200.0)
     b_lp, a_lp = butter(2, lp_cutoff / nyquist, btype='low')
@@ -906,7 +910,7 @@ def apply_internal_bells(membrane_signal, acceleration_signal, fs, material_name
     # 2. Спектральная чистка микро-колоколов (СДВИГ HPF ВВЕРХ с 3800 до 5000 Гц)
     b_hp_m, a_hp_m = butter(2, 5000.0 / nyquist, btype='high')
     micro_bell_output = lfilter(b_hp_m, a_hp_m, micro_bell_output)
-    
+
     b_lp_m, a_lp_m = butter(2, 7500.0 / nyquist, btype='low')
     micro_bell_output = lfilter(b_lp_m, a_lp_m, micro_bell_output)
 
@@ -920,6 +924,18 @@ def apply_internal_bells(membrane_signal, acceleration_signal, fs, material_name
         micro_bell_output = (micro_bell_output / max_micro) * 0.18
         
     combined_bells = bell_output * 0.82 + micro_bell_output * 0.18
+
+    # --- НОВЫЙ БЛОК: АДАПТИВНЫЙ ПИКОВЫЙ ЛИМИТЕР ДЛЯ КОЛОКОЛЬЧИКОВ ---
+    # Вычисляем пиковое значение тела (входного сигнала)
+    body_peak = np.max(np.abs(membrane_signal))
+    if body_peak > 1e-6:
+        # Порог, выше которого колокольчикам запрещено подниматься
+        limit_threshold = body_peak * bell_peak_ratio
+        
+        # Применяем мягкое насыщение (soft-clip) к combined_bells,
+        # чтобы их амплитуда не выходила за limit_threshold
+        # Используем tanh – он сохраняет форму сигнала, но плавно ограничивает пики
+        combined_bells = np.tanh(combined_bells / limit_threshold) * limit_threshold
     
     # 4. АБСОЛЮТНЫЙ TRANSIENT-GATE (Колокольчики гасятся на 100% на пике атаки барабана)
     dry_env = lfilter([0.05], [1.0, -0.95], np.abs(membrane_signal))
@@ -1686,7 +1702,7 @@ def synthesize_dhol_strike(
     
     if use_bells and len(acceleration_arr) > 0:
         dynamic_mix = bell_mix * (strike_force ** 0.5)
-        
+
         final_output = apply_internal_bells(
             membrane_signal=final_output,
             acceleration_signal=acceleration_arr,
@@ -1694,7 +1710,8 @@ def synthesize_dhol_strike(
             material_name=bell_material,
             mix=dynamic_mix,
             rr_index=rr_index,
-            strike_force=strike_force
+            strike_force=strike_force,
+            bell_peak_ratio=1.0
         )
     
     if body_polish_mix > 0.0:

@@ -84,6 +84,38 @@ MATERIAL_PHYSICS = {
     # ----------------------------------------------------------------------
     #  НОВЫЕ ДРЕВЕСНЫЕ ПОРОДЫ (WOODS)
     # ----------------------------------------------------------------------
+
+    # ----------------------------------------------------------------------
+    #  ДРЕВНИЕ ДРЕВЕСНЫЕ ПОРОДЫ (WOODS)
+    # ----------------------------------------------------------------------
+    "olive_wood": {
+        "category": "wood",
+        "name": "Древесина оливы (Священное дерево)",
+        "description": "Маслянистая, тяжёлая древесина вечнозелёного символа мира. Глубокий, землистый, тёплый тембр с долгим дыханием и мягкой отдачей.",
+        "density": 0.82, "E_long": 9.8, "E_trans": 1.4, "poisson": 0.35,
+        "loss_factor": 0.018, "visco_gamma": 9.0e-6, "base_thickness": 0.005,
+        "granular": {"enabled": False},
+        "fibrous": {"enabled": True, "intensity": 0.35, "tension": 1.3, "tear_freq": 12.0},
+        "fluid": {"enabled": False},
+        "tactile_profile": {"fibrousness": 0.35, "fluidity": 0.0, "granularity": 0.0, "brittleness": 0.0},
+        "inclusions": []
+    },
+    "mediterranean_cypress": {
+        "category": "wood",
+        "name": "Кипарис (Древо саркофагов)",
+        "description": "Ароматическая древесина вечности, в которой хоронили фараонов и пап. Вертикальный, стройный резонанс с оттенком печального величия.",
+        "density": 0.52, "E_long": 8.5, "E_trans": 0.75, "poisson": 0.36,
+        "loss_factor": 0.022, "visco_gamma": 1.3e-5, "base_thickness": 0.0045,
+        "granular": {"enabled": False},
+        "fibrous": {"enabled": True, "intensity": 0.55, "tension": 1.2, "tear_freq": 10.0},
+        "fluid": {"enabled": False},
+        "tactile_profile": {"fibrousness": 0.55, "fluidity": 0.0, "granularity": 0.0, "brittleness": 0.0},
+        "inclusions": []
+    },
+
+    # ----------------------------------------------------------------------
+    #  НОВЫЕ ДРЕВЕСНЫЕ ПОРОДЫ (WOODS)
+    # ----------------------------------------------------------------------
     "spruce": {
         "category": "wood",
         "name": "Резонансная ель",
@@ -248,6 +280,50 @@ MATERIAL_PHYSICS = {
     # ----------------------------------------------------------------------
     #  БИОМАТЕРИАЛЫ И ОРГАНИКА (BIO)
     # ----------------------------------------------------------------------
+
+    # ----------------------------------------------------------------------
+    #  ДРЕВНИЕ БИОМАТЕРИАЛЫ И ОРГАНИКА (BIO)
+    # ----------------------------------------------------------------------
+    "mammoth_ivory": {
+        "category": "bio",
+        "name": "Мамонтовый бивень",
+        "description": "Ископаемая слоновая кость из вечной мерзлоты. Чрезвычайно твёрдая, с резким костяным кликом и стеклянной нотой расколотого зуба.",
+        "density": 1.92, "E_long": 13.5, "E_trans": 9.0, "poisson": 0.31,
+        "loss_factor": 0.025, "visco_gamma": 6.0e-6, "base_thickness": 0.007,
+        "granular": {"enabled": False},
+        "fibrous": {"enabled": True, "intensity": 0.25, "tension": 2.4, "tear_freq": 22.0},
+        "fluid": {"enabled": False},
+        "tactile_profile": {"fibrousness": 0.25, "fluidity": 0.0, "granularity": 0.0, "brittleness": 0.7},
+        "inclusions": []
+    },
+    "deer_antler": {
+        "category": "bio",
+        "name": "Олений рог",
+        "description": "Плотная, упругая ткань рога. Глухой, полый гул с резонирующей внутренней пустотой и лёгким дребезгом костных перегородок.",
+        "density": 1.35, "E_long": 6.2, "E_trans": 4.5, "poisson": 0.36,
+        "loss_factor": 0.042, "visco_gamma": 1.0e-5, "base_thickness": 0.009,
+        "granular": {"enabled": False},
+        "fibrous": {"enabled": True, "intensity": 0.5, "tension": 1.4, "tear_freq": 13.0},
+        "fluid": {"enabled": False},
+        "tactile_profile": {"fibrousness": 0.5, "fluidity": 0.0, "granularity": 0.0, "brittleness": 0.3},
+        "inclusions": []
+    },
+    "ritual_papyrus_membrane": {
+        "category": "bio",
+        "name": "Папирусная мембрана",
+        "description": "Высушенные стебли папируса, спрессованные в тонкий лист. Сухой, шуршащий шелест Нила с тактильным оттенком древнего свитка.",
+        "density": 0.68, "E_long": 0.55, "E_trans": 0.28, "poisson": 0.38,
+        "loss_factor": 0.08, "visco_gamma": 2.8e-5, "base_thickness": 0.0007,
+        "granular": {"enabled": False},
+        "fibrous": {"enabled": True, "intensity": 0.85, "tension": 0.7, "tear_freq": 9.0},
+        "fluid": {"enabled": False},
+        "tactile_profile": {"fibrousness": 0.85, "fluidity": 0.0, "granularity": 0.0, "brittleness": 0.2},
+        "inclusions": []
+    },
+
+    # ----------------------------------------------------------------------
+    #  БИОМАТЕРИАЛЫ И ОРГАНИКА (BIO)
+    # ----------------------------------------------------------------------
     "animal_skin": {
         "category": "bio",
         "name": "Натуральная кожа (Козья)",
@@ -364,6 +440,74 @@ MATERIAL_PHYSICS = {
     # ----------------------------------------------------------------------
     #  МЕТАЛЛЫ И ТЯЖЕЛЫЕ СПЛАВЫ (METALS)
     # ----------------------------------------------------------------------
+
+    # ----------------------------------------------------------------------
+    #  ДРЕВНИЕ И САКРАЛЬНЫЕ МЕТАЛЛЫ И СПЛАВЫ (METALS)
+    # ----------------------------------------------------------------------
+    "church_bell_bronze": {
+        "category": "metal",
+        "name": "Колокольная бронза (Cu 78%, Sn 22%)",
+        "description": "Сакральный сплав церковных колоколов. Чистый, пронзительный, невероятно долгий звон с лёгкой горчинкой оловянной патины, уносящийся в небо.",
+        "density": 8.70, "E_long": 103.0, "E_trans": 103.0, "poisson": 0.35,
+        "loss_factor": 0.0003, "visco_gamma": 8.0e-7, "base_thickness": 0.006,
+        "granular": {
+            "enabled": True, "intensity": 0.3, "particle_count": 2500, "density": 1.0,
+            "freq_range": [4000.0, 14000.0], "duration_range": [0.001, 0.004], "env_power": 1.9
+        },
+        "fibrous": {"enabled": False}, "fluid": {"enabled": False},
+        "tactile_profile": {"fibrousness": 0.0, "fluidity": 0.0, "granularity": 0.3, "brittleness": 0.2},
+        "inclusions": []
+    },
+    "antique_brass_orichalcum": {
+        "category": "metal",
+        "name": "Античная латунь (Орихалк)",
+        "description": "Исторический сплав меди и цинка, известный с античности. Теплый, благовоспитанный, чуть глуховатый звон с оттенком древнего золота.",
+        "density": 8.45, "E_long": 95.0, "E_trans": 95.0, "poisson": 0.36,
+        "loss_factor": 0.0018, "visco_gamma": 2.5e-6, "base_thickness": 0.005,
+        "granular": {"enabled": False}, "fibrous": {"enabled": False}, "fluid": {"enabled": False},
+        "tactile_profile": {"fibrousness": 0.0, "fluidity": 0.0, "granularity": 0.0, "brittleness": 0.0},
+        "inclusions": [
+            {
+                "material": "ancient_patina_oxide",
+                "density_ratio": 0.06,
+                "pattern": "specks",
+                "granular": {
+                    "enabled": True, "particle_count": 2000,
+                    "freq_range": [6000.0, 16000.0], "duration_range": [0.001, 0.005], "env_power": 1.6
+                }
+            }
+        ]
+    },
+    "hepatizon_black_bronze": {
+        "category": "metal",
+        "name": "Гепатизон (Чёрная бронза)",
+        "description": "Редчайший античный сплав с добавлением золота и серебра, покрытый чёрной патиной. Глухой, мистический, густой низ с хрупкими высокими искрами.",
+        "density": 8.85, "E_long": 88.0, "E_trans": 88.0, "poisson": 0.34,
+        "loss_factor": 0.0045, "visco_gamma": 1.2e-6, "base_thickness": 0.006,
+        "granular": {
+            "enabled": True, "intensity": 0.65, "particle_count": 5000, "density": 1.4,
+            "freq_range": [3500.0, 12000.0], "duration_range": [0.001, 0.005], "env_power": 1.5
+        },
+        "fibrous": {"enabled": False}, "fluid": {"enabled": False},
+        "tactile_profile": {"fibrousness": 0.0, "fluidity": 0.0, "granularity": 0.65, "brittleness": 0.4},
+        "inclusions": []
+    },
+    "damascus_steel": {
+        "category": "metal",
+        "name": "Дамасская сталь (Сварной булат)",
+        "description": "Слоистый композитный металл древних клинков. Рождает многослойный, волокнистый звон с постоянно меняющимся тембром и лёгкой шероховатостью узора.",
+        "density": 7.85, "E_long": 195.0, "E_trans": 185.0, "poisson": 0.29,
+        "loss_factor": 0.0025, "visco_gamma": 1.5e-6, "base_thickness": 0.005,
+        "granular": {"enabled": False},
+        "fibrous": {"enabled": True, "intensity": 0.7, "tension": 2.3, "tear_freq": 21.0},
+        "fluid": {"enabled": False},
+        "tactile_profile": {"fibrousness": 0.7, "fluidity": 0.0, "granularity": 0.0, "brittleness": 0.15},
+        "inclusions": []
+    },
+
+    # ----------------------------------------------------------------------
+    #  МЕТАЛЛЫ И ТЯЖЕЛЫЕ СПЛАВЫ (METALS)
+    # ----------------------------------------------------------------------
     "aluminum": {
         "category": "metal",
         "name": "Алюминий",
@@ -458,6 +602,56 @@ MATERIAL_PHYSICS = {
         "inclusions": []
     },
 
+
+    # ----------------------------------------------------------------------
+    #  МИНЕРАЛЫ, КРИСТАЛЛЫ И ГЕО-МАТЕРИАЛЫ (GEOLOGICAL)
+    # ----------------------------------------------------------------------
+
+    # ----------------------------------------------------------------------
+    #  ДРЕВНИЕ МИНЕРАЛЫ И КАМНИ (GEOLOGICAL / MINERAL)
+    # ----------------------------------------------------------------------
+    "carrara_marble": {
+        "category": "mineral",
+        "name": "Каррарский мрамор",
+        "description": "Тот самый белый мрамор античных статуй и храмов. Холодный, хрустально-каменный удар с быстрым распадом в благородную пыль высоких частот.",
+        "density": 2.71, "E_long": 58.0, "E_trans": 58.0, "poisson": 0.22,
+        "loss_factor": 0.007, "visco_gamma": 9.0e-7, "base_thickness": 0.012,
+        "granular": {
+            "enabled": True, "intensity": 0.4, "particle_count": 4000, "density": 0.95,
+            "freq_range": [5000.0, 15000.0], "duration_range": [0.001, 0.004], "env_power": 1.8
+        },
+        "fibrous": {"enabled": False}, "fluid": {"enabled": False},
+        "tactile_profile": {"fibrousness": 0.0, "fluidity": 0.0, "granularity": 0.4, "brittleness": 0.7},
+        "inclusions": []
+    },
+    "obsidian": {
+        "category": "mineral",
+        "name": "Вулканический обсидиан",
+        "description": "Чёрное стекло древних жертвенных ножей. Резкий, режущий клик с дьявольски острым и хрупким затуханием.",
+        "density": 2.37, "E_long": 72.0, "E_trans": 72.0, "poisson": 0.17,
+        "loss_factor": 0.002, "visco_gamma": 5.0e-7, "base_thickness": 0.004,
+        "granular": {
+            "enabled": True, "intensity": 0.8, "particle_count": 7000, "density": 1.2,
+            "freq_range": [4000.0, 16000.0], "duration_range": [0.0005, 0.002], "env_power": 2.0
+        },
+        "fibrous": {"enabled": False}, "fluid": {"enabled": False},
+        "tactile_profile": {"fibrousness": 0.0, "fluidity": 0.0, "granularity": 0.8, "brittleness": 1.0},
+        "inclusions": []
+    },
+    "baltic_amber": {
+        "category": "mineral",
+        "name": "Балтийский янтарь (Ископаемая смола)",
+        "description": "Застывшая смола древних лесов с инклюзами. Лёгкое, тёплое, искристое пощёлкивание при ударе, словно хрустят сухие сосновые иглы.",
+        "density": 1.08, "E_long": 2.9, "E_trans": 2.9, "poisson": 0.35,
+        "loss_factor": 0.035, "visco_gamma": 1.4e-5, "base_thickness": 0.010,
+        "granular": {
+            "enabled": True, "intensity": 0.9, "particle_count": 12000, "density": 0.8,
+            "freq_range": [5000.0, 17000.0], "duration_range": [0.0005, 0.003], "env_power": 1.9
+        },
+        "fibrous": {"enabled": False}, "fluid": {"enabled": False},
+        "tactile_profile": {"fibrousness": 0.0, "fluidity": 0.0, "granularity": 0.9, "brittleness": 0.85},
+        "inclusions": []
+    },
 
     # ----------------------------------------------------------------------
     #  МИНЕРАЛЫ, КРИСТАЛЛЫ И ГЕО-МАТЕРИАЛЫ (GEOLOGICAL)
@@ -615,6 +809,24 @@ MATERIAL_PHYSICS = {
             "brittleness": 0.35  # Оставляем только тонкий стекловидный клик контакта при ударе
         },
         "inclusions": []
+    },
+
+    # ----------------------------------------------------------------------
+    #  ВНУТРЕННИЕ ВСПОМОГАТЕЛЬНЫЕ ШАБЛОНЫ ВКЛЮЧЕНИЙ (INCLUSION REFERENCE TEMPLATES)
+    # ----------------------------------------------------------------------
+
+    # ----------------------------------------------------------------------
+    #  ВСПОМОГАТЕЛЬНЫЙ МАТЕРИАЛ ВКЛЮЧЕНИЯ (для античной патины)
+    # ----------------------------------------------------------------------
+    "ancient_patina_oxide": {
+        "category": "mineral",
+        "name": "Благородная патина (Оксиды меди)",
+        "description": "Слой вековой патины на древней бронзе. Мягкий шелест микротрещин, скрадывающий высокие гармоники.",
+        "density": 5.3, "E_long": 12.0, "E_trans": 12.0, "poisson": 0.27,
+        "loss_factor": 0.04, "visco_gamma": 0.0, "base_thickness": 0.0005,
+        "granular": {"enabled": True, "particle_count": 4000, "freq_range": [5000.0, 16000.0], "duration_range": [0.0005, 0.004], "env_power": 1.6},
+        "fibrous": {"enabled": False}, "fluid": {"enabled": False},
+        "tactile_profile": {"granularity": 1.0, "brittleness": 0.9}, "inclusions": []
     },
 
     # ----------------------------------------------------------------------

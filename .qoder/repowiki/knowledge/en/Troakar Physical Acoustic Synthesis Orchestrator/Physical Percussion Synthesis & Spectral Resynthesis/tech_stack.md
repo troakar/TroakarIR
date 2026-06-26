@@ -1,0 +1,1 @@
+Taichi Lang for high-performance FDTD simulation (GPU/CPU backend), Tkinter for UI, SciPy/NumPy for signal processing, PyRoomAcoustics for spatial convolution, Librosa for spectral analysis.

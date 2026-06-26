@@ -1,0 +1,4 @@
+- Data-centric module exposing three primary configuration dictionaries: `RESONATOR_TEMPLATES` and instrument/percussion presets in `instruments.py`, `MATERIAL_PHYSICS` with a `blend_materials` utility in `materials.py`, and geometric `SHAPES` in `shapes.py`.
+- `instruments.py` acts as the primary catalog, mapping semantic instrument names (e.g., 'violin', 'kick_drum') to mathematical resonator models (e.g., 'bowed_coupled', 'drum_shell') via lambda-based mode builders.
+- `materials.py` provides a physics engine for material science, defining density, elasticity, and loss factors for woods, metals, and bios, including a `blend_materials` function for creating composite alloys with interpolated tactile and granular properties.
+- `shapes.py` offers a minimal lookup for geometric boundary conditions (square, circle, etc.) used in resonance calculations.

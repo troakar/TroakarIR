@@ -1,0 +1,5 @@
+- Modular sub-packages for specific instruments (Drums, Darbuka, Dhol) and a spectral tool, each following an engine-GUI-manifest triad.
+- Engine modules (`*_engine.py`) implement Finite-Difference Time-Domain (FDTD) physics using Taichi fields for GPU/CPU parallelization, exposing `synthesize_*` functions.
+- GUI modules (`*_gui.py`) provide Tkinter interfaces for parameter tuning, batch rendering, and progress tracking, importing engines locally.
+- Manifest files (`manifest.py`) define DLC metadata and entry points (`gui_entry_file`, `gui_class_name`) for dynamic loading by the host application.
+- Shared dependencies include `config.materials` for physical properties and `engine` utilities for tactile profiles and grid building.

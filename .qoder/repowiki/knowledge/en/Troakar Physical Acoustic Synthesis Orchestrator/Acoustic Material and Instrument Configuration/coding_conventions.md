@@ -1,0 +1,3 @@
+- Configuration dictionaries use uppercase constant names (e.g., `MATERIAL_PHYSICS`, `INSTRUMENT_PRESETS`) to denote immutable global state.
+- Material and instrument definitions include detailed Russian-language descriptions and names for UI localization and artistic context.
+- Resonator templates utilize lambda functions (`modes_builder`) to dynamically calculate harmonic modes based on instance parameters like scale and anisotropy.

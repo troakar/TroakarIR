@@ -1,0 +1,11 @@
+schema_version: 1
+module_path: build_system
+title: Manual Python Execution & Ad-hoc Workflow
+scope: []
+source_files:
+    - README.md
+    - main.py
+    - .gitignore
+    - GIT_COMMANDS.md
+depends_on: []
+related_to: []

@@ -7,8 +7,9 @@ import numpy as np
 import logging
 
 from dhol_engine import synthesize_dhol_strike, note_to_frequency
-from config.materials import MATERIAL_PHYSICS
+from config.materials import MATERIAL_PHYSICS, MATERIAL_CATEGORIES
 from dlc.dhol.dhol_packer_gui import DholPackerFrame
+from ui.material_picker import MaterialPickerDialog
 from ui.utils import format_material_display, format_material_list, extract_key_from_display
 
 logger = logging.getLogger("TheHall.GUI")
@@ -88,12 +89,14 @@ class DholDLCFrame(ttk.Notebook):
         self.skin_selector = ttk.Combobox(material_group, textvariable=self.skin_mat_var, values=self.mat_list, state="readonly", width=28)
         self.skin_selector.grid(row=0, column=1, padx=4, pady=2, sticky=tk.W)
         self.skin_selector.bind("<<ComboboxSelected>>", self.update_material_descriptions)
+        ttk.Button(material_group, text="...", width=2, command=lambda: self.open_material_picker("skin")).grid(row=0, column=2, padx=4, pady=2)
 
         ttk.Label(material_group, text="Материал кадушки (Корпус):").grid(row=1, column=0, sticky=tk.W, padx=4, pady=2)
         self.shell_mat_var = tk.StringVar(value=format_material_display("walnut", MATERIAL_PHYSICS))
         self.shell_selector = ttk.Combobox(material_group, textvariable=self.shell_mat_var, values=self.mat_list, state="readonly", width=28)
         self.shell_selector.grid(row=1, column=1, padx=4, pady=2, sticky=tk.W)
         self.shell_selector.bind("<<ComboboxSelected>>", self.update_material_descriptions)
+        ttk.Button(material_group, text="...", width=2, command=lambda: self.open_material_picker("shell")).grid(row=1, column=2, padx=4, pady=2)
 
         self.mat_desc_lbl = ttk.Label(material_group, text="Кожа: Натуральная кожа. Кадушка: Кавказский орех.", font=("Helvetica", 8, "italic"), foreground="#aaa", wraplength=280)
         self.mat_desc_lbl.grid(row=2, column=0, columnspan=2, padx=4, pady=3, sticky=tk.W)
@@ -236,6 +239,7 @@ class DholDLCFrame(ttk.Notebook):
         self.bell_mat_var = tk.StringVar(value=format_material_display("steel", MATERIAL_PHYSICS))
         self.bell_selector = ttk.Combobox(self.bells_params_frame, textvariable=self.bell_mat_var, values=metal_materials, state="readonly", width=25)
         self.bell_selector.grid(row=0, column=1, sticky=tk.W, padx=4, pady=3)
+        ttk.Button(self.bells_params_frame, text="...", width=2, command=lambda: self.open_material_picker("bell")).grid(row=0, column=2, padx=4, pady=3)
 
         # Mix колокольчиков
         ttk.Label(self.bells_params_frame, text="Громкость (Mix):").grid(row=1, column=0, sticky=tk.W, padx=4, pady=3)
@@ -405,11 +409,17 @@ class DholDLCFrame(ttk.Notebook):
         return extract_key_from_display(selected_value)
 
     def update_material_descriptions(self, event=None):
-        skin_key = self._resolve_material_key(self.skin_mat_var.get())
-        shell_key = self._resolve_material_key(self.shell_mat_var.get())
-        skin = MATERIAL_PHYSICS.get(skin_key, {})
-        shell = MATERIAL_PHYSICS.get(shell_key, {})
-        desc = f"Мембрана: {skin.get('name', 'Custom')}. Кадушка: {shell.get('name', 'Custom')}."
+        """Обновляет текстовые описания выбранных материалов."""
+        if not hasattr(self, 'mat_desc_lbl') or not self.mat_desc_lbl.winfo_exists():
+            return
+        
+        skin_key = extract_key_from_display(self.skin_mat_var.get())
+        shell_key = extract_key_from_display(self.shell_mat_var.get())
+        
+        skin_desc = MATERIAL_PHYSICS.get(skin_key, {}).get("description", "")
+        shell_desc = MATERIAL_PHYSICS.get(shell_key, {}).get("description", "")
+        
+        desc = f"Кожа: {skin_desc}\nКадушка: {shell_desc}"
         self.mat_desc_lbl.config(text=desc)
         
         self.update_acoustic_preview()
@@ -421,6 +431,28 @@ class DholDLCFrame(ttk.Notebook):
         octave = int((h + 0.5) // 12) - 1
         note_idx = int(round(h)) % 12
         return f"{note_names[note_idx]}{octave}"
+
+    def open_material_picker(self, target):
+        """Открывает диалог выбора материала для указанного элемента."""
+        selected_key = MaterialPickerDialog.ask_material(self, MATERIAL_PHYSICS, MATERIAL_CATEGORIES)
+        if selected_key:
+            if target == "skin":
+                self.skin_mat_var.set(format_material_display(selected_key, MATERIAL_PHYSICS))
+            elif target == "shell":
+                self.shell_mat_var.set(format_material_display(selected_key, MATERIAL_PHYSICS))
+            elif target == "bell":
+                self.bell_mat_var.set(format_material_display(selected_key, MATERIAL_PHYSICS))
+            self.after(100, self.safe_update_material_descriptions)
+
+    def safe_update_material_descriptions(self):
+        """Безопасно обновляет описания материалов, если вкладка активна."""
+        if hasattr(self, 'mat_desc_lbl') and self.mat_desc_lbl.winfo_exists():
+            self.update_material_descriptions()
+            self.refresh_styles()
+
+    def refresh_styles(self):
+        """Принудительно обновляет стили для всех виджетов."""
+        # Удаляю принудительное обновление стилей, чтобы не вмешиваться в глобальную тему
 
     def update_acoustic_preview(self, event=None):
         try:

@@ -1,0 +1,1 @@
+Generates high-fidelity percussion audio via Taichi-accelerated FDTD simulations and performs material-based spectral resynthesis on existing samples.

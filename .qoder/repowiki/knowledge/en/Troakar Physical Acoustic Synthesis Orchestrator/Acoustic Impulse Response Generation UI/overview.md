@@ -1,0 +1,1 @@
+Provides a Tkinter-based graphical interface for generating acoustic, percussion, and FDTD-simulated impulse responses with real-time visualization and parameter control.

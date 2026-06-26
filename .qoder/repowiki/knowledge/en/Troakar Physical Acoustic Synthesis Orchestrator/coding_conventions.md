@@ -1,0 +1,2 @@
+- DLC modules expose a `manifest.py` containing a `DLC_MANIFEST` dictionary that defines metadata and GUI entry points.
+- Plugin GUI classes are instantiated with a parent widget and a reference to the main application context for shared state access.

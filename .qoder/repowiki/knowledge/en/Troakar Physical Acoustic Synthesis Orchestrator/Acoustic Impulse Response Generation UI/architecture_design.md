@@ -1,0 +1,4 @@
+- Entry point `gui.py` defines `IRGeneratorApp`, orchestrating three domain-specific tabs (`AcousticTab`, `PercussionTab`, `TaichiTab`) within a `ttk.Notebook`.
+- Each tab extends `ttk.Frame` and encapsulates its own UI layout, state management, and interaction with backend engines (`engine.core_dsp`, `engine.core_taichi`, `engine.core_drums`).
+- Shared utility `build_category_dict` in `utils.py` standardizes preset categorization across tabs.
+- Heavy computations in `TaichiTab` and `AcousticTab` are offloaded to background threads or external engines to maintain UI responsiveness, with status updates propagated via a shared `status_var`.

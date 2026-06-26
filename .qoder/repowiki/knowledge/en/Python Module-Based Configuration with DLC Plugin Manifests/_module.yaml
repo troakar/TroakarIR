@@ -1,0 +1,14 @@
+schema_version: 1
+module_path: configuration_system
+title: Python Module-Based Configuration with DLC Plugin Manifests
+scope: []
+source_files:
+    - config/instruments.py
+    - config/materials.py
+    - config/shapes.py
+    - dlc_loader.py
+    - dlc/dhol/manifest.py
+    - dlc/darbuka/manifest.py
+    - engine/core_logging.py
+depends_on: []
+related_to: []

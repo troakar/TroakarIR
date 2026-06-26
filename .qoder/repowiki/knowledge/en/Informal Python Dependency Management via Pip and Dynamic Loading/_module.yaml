@@ -1,0 +1,13 @@
+schema_version: 1
+module_path: dependency_management
+title: Informal Python Dependency Management via Pip and Dynamic Loading
+scope: []
+source_files:
+    - README.md
+    - dlc_loader.py
+    - main.py
+    - dlc/__init__.py
+    - dlc/dhol/manifest.py
+    - dlc/Drums/manifest.py
+depends_on: []
+related_to: []

@@ -1,0 +1,15 @@
+schema_version: 1
+module_path: logging_system
+title: Dual-Channel Logging Architecture with Structured Physics Telemetry
+scope: []
+source_files:
+    - engine/core_logging.py
+    - main.py
+    - dlc_loader.py
+    - engine/core_dsp.py
+    - ui/tab_acoustic.py
+    - ui/tab_percussion.py
+    - dlc/Drums/drums_gui.py
+    - dlc/dhol/dhol_gui.py
+depends_on: []
+related_to: []

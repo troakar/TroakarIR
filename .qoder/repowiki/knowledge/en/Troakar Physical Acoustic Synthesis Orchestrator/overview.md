@@ -1,0 +1,1 @@
+Orchestrates a plugin-based acoustic synthesis ecosystem by dynamically mounting Taichi-accelerated FDTD simulation modules into a unified Tkinter interface.

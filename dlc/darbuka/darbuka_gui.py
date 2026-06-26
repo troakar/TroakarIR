@@ -10,7 +10,8 @@ import numpy as np
 import logging
 
 from dlc.darbuka.darbuka_engine import synthesize_darbuka_strike, note_to_frequency
-from config.materials import MATERIAL_PHYSICS
+from config.materials import MATERIAL_PHYSICS, MATERIAL_CATEGORIES
+from ui.material_picker import MaterialPickerDialog
 from ui.utils import format_material_display, format_material_list, extract_key_from_display
 
 logger = logging.getLogger("TheHall.GUI")
@@ -218,11 +219,13 @@ class DarbukaDLCFrame(ttk.Notebook):
         self.skin_mat_var = tk.StringVar(value=format_material_display("mylar_standard", MATERIAL_PHYSICS))
         self.skin_selector = ttk.Combobox(material_group, textvariable=self.skin_mat_var, values=self.mat_list, state="readonly", width=28)
         self.skin_selector.grid(row=0, column=1, padx=4, pady=2, sticky=tk.W)
+        ttk.Button(material_group, text="...", width=2, command=lambda: self.open_material_picker("skin")).grid(row=0, column=2, padx=4, pady=2)
 
         ttk.Label(material_group, text="Металл/Керамика (Кубок):").grid(row=1, column=0, sticky=tk.W, padx=4, pady=2)
         self.shell_mat_var = tk.StringVar(value=format_material_display("aluminum", MATERIAL_PHYSICS))
         self.shell_selector = ttk.Combobox(material_group, textvariable=self.shell_mat_var, values=self.mat_list, state="readonly", width=28)
         self.shell_selector.grid(row=1, column=1, padx=4, pady=2, sticky=tk.W)
+        ttk.Button(material_group, text="...", width=2, command=lambda: self.open_material_picker("shell")).grid(row=1, column=2, padx=4, pady=2)
 
         # --- ВКЛАДКА 2: ФИЗИКА ---
         character_group = ttk.LabelFrame(tab_physics, text=" Окрас и Тактильность ", padding="6")
@@ -307,6 +310,15 @@ class DarbukaDLCFrame(ttk.Notebook):
         self.btn_gen.pack(fill=tk.X, pady=(2, 0))
 
         self.update_frequency_labels()
+
+    def open_material_picker(self, target):
+        """Открывает диалог выбора материала для указанного элемента."""
+        selected_key = MaterialPickerDialog.ask_material(self, MATERIAL_PHYSICS, MATERIAL_CATEGORIES)
+        if selected_key:
+            if target == "skin":
+                self.skin_mat_var.set(format_material_display(selected_key, MATERIAL_PHYSICS))
+            elif target == "shell":
+                self.shell_mat_var.set(format_material_display(selected_key, MATERIAL_PHYSICS))
 
     def update_frequency_labels(self, event=None):
         f = note_to_frequency(self.note_var.get())

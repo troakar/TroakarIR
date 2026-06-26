@@ -1,0 +1,1 @@
+Generates high-fidelity stereo impulse responses for virtual instruments using finite-difference time-domain simulations, modal synthesis, and material-aware tactile texturing.

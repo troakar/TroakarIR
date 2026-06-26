@@ -1,0 +1,12 @@
+schema_version: 1
+module_path: frontend_style
+title: Tkinter 'Clam' Theme with Custom Styled Buttons
+scope: []
+source_files:
+    - main.py
+    - ui/gui.py
+    - ui/tab_acoustic.py
+    - ui/tab_percussion.py
+    - ui/tab_taichi.py
+depends_on: []
+related_to: []

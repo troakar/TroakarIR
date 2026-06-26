@@ -1,0 +1,4 @@
+- Each instrument sub-module implements a `get_effective_properties` function to compute composite physical parameters from base materials and inclusions.
+- Engines expose a primary `synthesize_*` function that accepts physical parameters (materials, frequency, strike force) and returns a normalized NumPy audio array.
+- GUI classes inherit from `ttk.Notebook` or `ttk.Frame` and follow a naming convention of `{Instrument}DLCFrame` or `{Instrument}PackerFrame`.
+- Manifest files export a `DLC_MANIFEST` dictionary containing version, author, description, and GUI entry point references.

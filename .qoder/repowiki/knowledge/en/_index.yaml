@@ -1,0 +1,250 @@
+# 知识卡导出索引文件
+schema_version: 1
+locale: en-US
+branch: main
+nodes_managed: true
+exported_at: "2026-06-26T00:51:16Z"
+modules:
+    "":
+        dir_name: Troakar Physical Acoustic Synthesis Orchestrator
+        title: Troakar Physical Acoustic Synthesis Orchestrator
+        scope:
+            - .gitignore
+            - GIT_COMMANDS.md
+            - main.py
+            - dhol_engine.py
+            - dlc_loader.py
+            - slicer.py
+            - tools/
+            - README.md
+            - The_Dhol_Samples\v2 withot small details\Dhol_Chapa_D2_v127_rr1.wav
+            - The_Dhol_Samples\v2 withot small details\Dhol_Duum_D2_v127_rr1.wav
+            - The_Dhol_Samples\v2 withot small details\Dhol_Mute_D2_v127_rr1.wav
+            - The_Dhol_Samples\v2 withot small details\Dhol_Tek_a_D2_v127_rr1.wav
+            - The_Dhol_Samples\Новая папка\Dhol_Chapa_D2_v127_rr1.wav
+            - The_Dhol_Samples\Новая папка\Dhol_Duum_D2_Test v2.wav
+            - The_Dhol_Samples\Новая папка\Dhol_Duum_D2_Test.wav
+            - The_Dhol_Samples\Новая папка\Dhol_Duum_D2_v127_rr1.wav
+            - The_Dhol_Samples\Новая папка\Dhol_Duum_D2_v127_rr1_делл 05.wav
+            - The_Dhol_Samples\Новая папка\Dhol_Open_bass_D2_v127_rr1.wav
+            - The_Dhol_Samples\Новая папка\Dhol_Tek_a_D2_v127_rr1.wav
+            - TroakarIR.zip
+            - config\instruments.py
+            - config\materials.py
+            - config\shapes.py
+            - dlc\Drums\drums_engine.py
+            - dlc\Drums\drums_gui.py
+            - dlc\Drums\manifest.py
+            - dlc\__init__.py
+            - dlc\darbuka\darbuka_engine.py
+            - dlc\darbuka\darbuka_gui.py
+            - dlc\darbuka\manifest.py
+            - dlc\dhol\dhol_engine — копия.py
+            - dlc\dhol\dhol_engine.py
+            - dlc\dhol\dhol_gui.py
+            - dlc\dhol\dhol_packer_gui.py
+            - dlc\dhol\impulses\corpus_walnut_D2-A2.wav
+            - dlc\dhol\manifest.py
+            - dlc\spectral_resynth\engine.py
+            - dlc\spectral_resynth\gui.py
+            - dlc\spectral_resynth\manifest.py
+            - engine\core_drums.py
+            - engine\core_dsp.py
+            - engine\core_logging.py
+            - engine\core_taichi.py
+            - engine\geometry.py
+            - engine\grid_builder.py
+            - engine\shell_texture.py
+            - engine\spatial.py
+            - engine\tactile.py
+            - impulses\msae_textures\MSAE_v4_Индийский_палисандр_E16.0.wav
+            - impulses\msae_textures\MSAE_v4_Кавказский_орех_E11.2.wav
+            - impulses\msae_textures\MSAE_v4_Красный_кедр_E9.0.wav
+            - impulses\msae_textures\MSAE_v4_Кристаллы_морской_соли_E25.0.wav
+            - impulses\msae_textures\MSAE_v4_Метеоритное_железо__Камасит__E192.0.wav
+            - impulses\msae_textures\MSAE_v4_Окаменелое_дерево_E75.0.wav
+            - impulses\msae_textures\MSAE_v4_Поморская_морёная_сосна__Топлёк__E17.8.wav
+            - impulses\msae_textures\MSAE_v4_Резонансная_ель_E14.5.wav
+            - impulses\msae_textures\MSAE_v4_Чёрное_дерево__Эбен__E18.0.wav
+            - masks\Bowl.png
+            - masks\Drum.png
+            - masks\Monolith.png
+            - masks\Waterphone.png
+            - masks\ankh.png
+            - masks\anvil.png
+            - masks\balalaika.png
+            - masks\broken glass.png
+            - masks\broken_bell.png
+            - masks\camertone.png
+            - masks\cello.png
+            - masks\chest.png
+            - masks\circle_hole.png
+            - masks\coffin.png
+            - masks\dechig_pondar.png
+            - masks\double bass.png
+            - masks\gramophone.png
+            - masks\guitar.png
+            - masks\iron_lung.png
+            - masks\lute.png
+            - masks\mandolin.png
+            - masks\orthodox cross.png
+            - masks\pentagram.png
+            - masks\piano_classic.png
+            - masks\piano_rectangular.png
+            - masks\sax.png
+            - masks\shape_10.png
+            - masks\shichepshin.png
+            - masks\skull.png
+            - masks\spiral.png
+            - masks\temple.png
+            - masks\triangle.png
+            - masks\trumpet.png
+            - masks\tube curved.png
+            - masks\violin.png
+            - masks\web.png
+            - masks\woodwind.png
+            - pictures\9cf190da-9560-440f-985c-c81bec0bee86.jpg
+            - pictures\cc6f6461-4a40-4e71-a424-e58c4dcda2a6.jpg
+            - taichi_physics_log.jsonl
+            - tools\declick_utility.py
+            - troakar_debug.log
+            - ui\README_tab_taichi.md
+            - ui\gui.py
+            - ui\tab_acoustic.py
+            - ui\tab_percussion.py
+            - ui\tab_taichi.py
+            - ui\utils.py
+        source_files: []
+        children:
+            - config
+            - dlc
+            - engine
+            - ui
+        depends_on: []
+        related_to: []
+    build_system:
+        dir_name: Manual Python Execution & Ad-hoc Workflow
+        title: Manual Python Execution & Ad-hoc Workflow
+        scope: []
+        source_files:
+            - README.md
+            - main.py
+            - .gitignore
+            - GIT_COMMANDS.md
+        children: []
+        depends_on: []
+        related_to: []
+    config:
+        dir_name: Acoustic Material and Instrument Configuration
+        title: Acoustic Material and Instrument Configuration
+        scope:
+            - config/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to: []
+    configuration_system:
+        dir_name: Python Module-Based Configuration with DLC Plugin Manifests
+        title: Python Module-Based Configuration with DLC Plugin Manifests
+        scope: []
+        source_files:
+            - config/instruments.py
+            - config/materials.py
+            - config/shapes.py
+            - dlc_loader.py
+            - dlc/dhol/manifest.py
+            - dlc/darbuka/manifest.py
+            - engine/core_logging.py
+        children: []
+        depends_on: []
+        related_to: []
+    dependency_management:
+        dir_name: Informal Python Dependency Management via Pip and Dynamic Loading
+        title: Informal Python Dependency Management via Pip and Dynamic Loading
+        scope: []
+        source_files:
+            - README.md
+            - dlc_loader.py
+            - main.py
+            - dlc/__init__.py
+            - dlc/dhol/manifest.py
+            - dlc/Drums/manifest.py
+        children: []
+        depends_on: []
+        related_to: []
+    dlc:
+        dir_name: Physical Percussion Synthesis & Spectral Resynthesis
+        title: Physical Percussion Synthesis & Spectral Resynthesis
+        scope:
+            - dlc/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: engine
+    engine:
+        dir_name: Physical Acoustic Synthesis Engine
+        title: Physical Acoustic Synthesis Engine
+        scope:
+            - engine/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: dlc
+            - path: ui
+    error_handling:
+        dir_name: Error Handling — Logging-Based Exception Management with Graceful Degradation
+        title: Error Handling — Logging-Based Exception Management with Graceful Degradation
+        scope: []
+        source_files:
+            - main.py
+            - engine/core_logging.py
+            - dlc_loader.py
+            - ui/tab_acoustic.py
+            - ui/tab_percussion.py
+            - dlc/Drums/drums_gui.py
+            - config/materials.py
+            - dhol_engine.py
+        children: []
+        depends_on: []
+        related_to: []
+    frontend_style:
+        dir_name: Tkinter 'Clam' Theme with Custom Styled Buttons
+        title: Tkinter 'Clam' Theme with Custom Styled Buttons
+        scope: []
+        source_files:
+            - main.py
+            - ui/gui.py
+            - ui/tab_acoustic.py
+            - ui/tab_percussion.py
+            - ui/tab_taichi.py
+        children: []
+        depends_on: []
+        related_to: []
+    logging_system:
+        dir_name: Dual-Channel Logging Architecture with Structured Physics Telemetry
+        title: Dual-Channel Logging Architecture with Structured Physics Telemetry
+        scope: []
+        source_files:
+            - engine/core_logging.py
+            - main.py
+            - dlc_loader.py
+            - engine/core_dsp.py
+            - ui/tab_acoustic.py
+            - ui/tab_percussion.py
+            - dlc/Drums/drums_gui.py
+            - dlc/dhol/dhol_gui.py
+        children: []
+        depends_on: []
+        related_to: []
+    ui:
+        dir_name: Acoustic Impulse Response Generation UI
+        title: Acoustic Impulse Response Generation UI
+        scope:
+            - ui/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: engine

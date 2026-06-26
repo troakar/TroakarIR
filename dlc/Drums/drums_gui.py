@@ -7,7 +7,8 @@ import os
 import logging
 
 from .drums_engine import synthesize_drum_hit
-from config.materials import MATERIAL_PHYSICS
+from config.materials import MATERIAL_PHYSICS, MATERIAL_CATEGORIES
+from ui.material_picker import MaterialPickerDialog
 from ui.utils import format_material_display, format_material_list, extract_key_from_display
 
 logger = logging.getLogger("Troakar.DrumsGUI")
@@ -115,6 +116,17 @@ class DrumsDLCFrame(ttk.Notebook):
         self.btn_render = ttk.Button(btn_frame, text="🚀 СГЕНЕРИРОВАТЬ DRUM KIT", command=self.start_batch_render)
         self.btn_render.pack(side=tk.RIGHT, fill=tk.X, expand=True, padx=2)
 
+    def open_material_picker(self, target):
+        """Открывает диалог выбора материала для указанного элемента."""
+        selected_key = MaterialPickerDialog.ask_material(self, MATERIAL_PHYSICS, MATERIAL_CATEGORIES)
+        if selected_key:
+            if target == "head":
+                self.head_mat.set(format_material_display(selected_key, MATERIAL_PHYSICS))
+            elif target == "shell":
+                self.shell_mat.set(format_material_display(selected_key, MATERIAL_PHYSICS))
+            elif target == "cym":
+                self.cym_mat.set(format_material_display(selected_key, MATERIAL_PHYSICS))
+
     def setup_physics_ui(self):
         mat_frame = ttk.LabelFrame(self.tab_physics, text=" Выбор материалов ", padding="6")
         mat_frame.pack(fill=tk.X, pady=4)
@@ -123,16 +135,19 @@ class DrumsDLCFrame(ttk.Notebook):
         self.head_mat = ttk.Combobox(mat_frame, values=self.mat_list, state="readonly", width=30)
         self.head_mat.set(format_material_display("animal_skin", MATERIAL_PHYSICS))
         self.head_mat.grid(row=0, column=1, padx=4, pady=2)
+        ttk.Button(mat_frame, text="...", width=2, command=lambda: self.open_material_picker("head")).grid(row=0, column=2, padx=4, pady=2)
 
         ttk.Label(mat_frame, text="Кадушка (Shells):").grid(row=1, column=0, sticky=tk.W, padx=4)
         self.shell_mat = ttk.Combobox(mat_frame, values=self.mat_list, state="readonly", width=30)
         self.shell_mat.set(format_material_display("maple", MATERIAL_PHYSICS))
         self.shell_mat.grid(row=1, column=1, padx=4, pady=2)
+        ttk.Button(mat_frame, text="...", width=2, command=lambda: self.open_material_picker("shell")).grid(row=1, column=2, padx=4, pady=2)
 
         ttk.Label(mat_frame, text="Тарелки (Cymbals):").grid(row=2, column=0, sticky=tk.W, padx=4)
         self.cym_mat = ttk.Combobox(mat_frame, values=self.mat_list, state="readonly", width=30)
         self.cym_mat.set(format_material_display("bronze", MATERIAL_PHYSICS))
         self.cym_mat.grid(row=2, column=1, padx=4, pady=2)
+        ttk.Button(mat_frame, text="...", width=2, command=lambda: self.open_material_picker("cym")).grid(row=2, column=2, padx=4, pady=2)
 
         tweak_frame = ttk.LabelFrame(self.tab_physics, text=" Глобальный Твикинг ", padding="6")
         tweak_frame.pack(fill=tk.X, pady=4)

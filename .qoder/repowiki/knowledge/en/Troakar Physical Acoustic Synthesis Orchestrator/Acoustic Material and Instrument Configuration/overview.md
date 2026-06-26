@@ -1,0 +1,1 @@
+Defines physical properties, resonator templates, and presets for synthesizing acoustic instruments, percussion, and material blends.

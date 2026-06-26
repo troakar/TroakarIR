@@ -1,0 +1,3 @@
+- Tabs inherit from `ttk.Frame` and accept a shared `status_var` in their constructor for centralized status reporting.
+- Preset and material selections use `build_category_dict` to populate `ttk.Combobox` widgets with categorized, sorted display strings.
+- Long-running generation tasks are executed in daemon threads to prevent blocking the main UI thread, using `self.after` for safe UI updates.

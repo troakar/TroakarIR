@@ -1,0 +1,3 @@
+- Plugin Architecture: Uses a manifest-driven discovery system (`dlc_loader.py`) to dynamically import and mount DLC modules (e.g., Dhol, Drums) as tabs in the main UI.
+- Dynamic UI Integration: The entry point (`main.py`) recursively scans the widget tree to locate the primary `ttk.Notebook` and injects plugin frames at runtime.
+- Shared Simulation Core: All plugins and core tabs rely on a common `engine/` layer for Taichi FDTD computations, DSP, and material physics, ensuring consistent physical modeling across the application.

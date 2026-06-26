@@ -1,0 +1,3 @@
+- **Taichi Lang**: Used for high-performance parallel computing of FDTD physics kernels on GPU/CPU backends (`engine/core_taichi.py`).
+- **PyRoomAcoustics**: Integrated for image-source method room impulse response generation (`engine/core_taichi.py`).
+- **SciPy & NumPy**: Core dependencies for signal processing (butterworth filters, FFT, convolution) and numerical array operations across all modules.

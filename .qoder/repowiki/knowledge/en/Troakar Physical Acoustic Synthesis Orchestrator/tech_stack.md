@@ -1,0 +1,1 @@
+Python with Tkinter/TkinterDnD for the UI framework and Taichi for high-performance parallel physics simulations shared across all synthesis modules.

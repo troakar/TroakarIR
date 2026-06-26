@@ -1,0 +1,112 @@
+schema_version: 1
+module_path: ""
+title: Troakar Physical Acoustic Synthesis Orchestrator
+scope:
+    - .gitignore
+    - GIT_COMMANDS.md
+    - main.py
+    - dhol_engine.py
+    - dlc_loader.py
+    - slicer.py
+    - tools/
+    - README.md
+    - The_Dhol_Samples\v2 withot small details\Dhol_Chapa_D2_v127_rr1.wav
+    - The_Dhol_Samples\v2 withot small details\Dhol_Duum_D2_v127_rr1.wav
+    - The_Dhol_Samples\v2 withot small details\Dhol_Mute_D2_v127_rr1.wav
+    - The_Dhol_Samples\v2 withot small details\Dhol_Tek_a_D2_v127_rr1.wav
+    - The_Dhol_Samples\Новая папка\Dhol_Chapa_D2_v127_rr1.wav
+    - The_Dhol_Samples\Новая папка\Dhol_Duum_D2_Test v2.wav
+    - The_Dhol_Samples\Новая папка\Dhol_Duum_D2_Test.wav
+    - The_Dhol_Samples\Новая папка\Dhol_Duum_D2_v127_rr1.wav
+    - The_Dhol_Samples\Новая папка\Dhol_Duum_D2_v127_rr1_делл 05.wav
+    - The_Dhol_Samples\Новая папка\Dhol_Open_bass_D2_v127_rr1.wav
+    - The_Dhol_Samples\Новая папка\Dhol_Tek_a_D2_v127_rr1.wav
+    - TroakarIR.zip
+    - config\instruments.py
+    - config\materials.py
+    - config\shapes.py
+    - dlc\Drums\drums_engine.py
+    - dlc\Drums\drums_gui.py
+    - dlc\Drums\manifest.py
+    - dlc\__init__.py
+    - dlc\darbuka\darbuka_engine.py
+    - dlc\darbuka\darbuka_gui.py
+    - dlc\darbuka\manifest.py
+    - dlc\dhol\dhol_engine — копия.py
+    - dlc\dhol\dhol_engine.py
+    - dlc\dhol\dhol_gui.py
+    - dlc\dhol\dhol_packer_gui.py
+    - dlc\dhol\impulses\corpus_walnut_D2-A2.wav
+    - dlc\dhol\manifest.py
+    - dlc\spectral_resynth\engine.py
+    - dlc\spectral_resynth\gui.py
+    - dlc\spectral_resynth\manifest.py
+    - engine\core_drums.py
+    - engine\core_dsp.py
+    - engine\core_logging.py
+    - engine\core_taichi.py
+    - engine\geometry.py
+    - engine\grid_builder.py
+    - engine\shell_texture.py
+    - engine\spatial.py
+    - engine\tactile.py
+    - impulses\msae_textures\MSAE_v4_Индийский_палисандр_E16.0.wav
+    - impulses\msae_textures\MSAE_v4_Кавказский_орех_E11.2.wav
+    - impulses\msae_textures\MSAE_v4_Красный_кедр_E9.0.wav
+    - impulses\msae_textures\MSAE_v4_Кристаллы_морской_соли_E25.0.wav
+    - impulses\msae_textures\MSAE_v4_Метеоритное_железо__Камасит__E192.0.wav
+    - impulses\msae_textures\MSAE_v4_Окаменелое_дерево_E75.0.wav
+    - impulses\msae_textures\MSAE_v4_Поморская_морёная_сосна__Топлёк__E17.8.wav
+    - impulses\msae_textures\MSAE_v4_Резонансная_ель_E14.5.wav
+    - impulses\msae_textures\MSAE_v4_Чёрное_дерево__Эбен__E18.0.wav
+    - masks\Bowl.png
+    - masks\Drum.png
+    - masks\Monolith.png
+    - masks\Waterphone.png
+    - masks\ankh.png
+    - masks\anvil.png
+    - masks\balalaika.png
+    - masks\broken glass.png
+    - masks\broken_bell.png
+    - masks\camertone.png
+    - masks\cello.png
+    - masks\chest.png
+    - masks\circle_hole.png
+    - masks\coffin.png
+    - masks\dechig_pondar.png
+    - masks\double bass.png
+    - masks\gramophone.png
+    - masks\guitar.png
+    - masks\iron_lung.png
+    - masks\lute.png
+    - masks\mandolin.png
+    - masks\orthodox cross.png
+    - masks\pentagram.png
+    - masks\piano_classic.png
+    - masks\piano_rectangular.png
+    - masks\sax.png
+    - masks\shape_10.png
+    - masks\shichepshin.png
+    - masks\skull.png
+    - masks\spiral.png
+    - masks\temple.png
+    - masks\triangle.png
+    - masks\trumpet.png
+    - masks\tube curved.png
+    - masks\violin.png
+    - masks\web.png
+    - masks\woodwind.png
+    - pictures\9cf190da-9560-440f-985c-c81bec0bee86.jpg
+    - pictures\cc6f6461-4a40-4e71-a424-e58c4dcda2a6.jpg
+    - taichi_physics_log.jsonl
+    - tools\declick_utility.py
+    - troakar_debug.log
+    - ui\README_tab_taichi.md
+    - ui\gui.py
+    - ui\tab_acoustic.py
+    - ui\tab_percussion.py
+    - ui\tab_taichi.py
+    - ui\utils.py
+source_files: []
+depends_on: []
+related_to: []

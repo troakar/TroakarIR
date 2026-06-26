@@ -1,0 +1,1 @@
+Uses `tkinter` and `ttk` for GUI, `PIL`/`ImageTk` for canvas rendering in `TaichiTab`, and `numpy`/`scipy` for audio data handling.
