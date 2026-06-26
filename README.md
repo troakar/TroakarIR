@@ -1,4 +1,4 @@
-# 🥁 THE HALL — Coupled FDTD Dhol Engine
+# 🥁 THE DHOL — Coupled FDTD Dhol Engine
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1HIRSkf9cgrHEm4PN0-9dt0T9tvVxCBEj?authuser=1)
 
@@ -75,7 +75,7 @@
 
 ---
 
-## 📖 Справочник артикуляций «THE HALL»
+## 📖 Справочник артикуляций «THE DHOL»
 
 | Артикуляция | Физика в FDTD-движке | Звук в миксе | Роль в кавказской партии |
 | :--- | :--- | :--- | :--- |
