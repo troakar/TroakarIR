@@ -336,12 +336,15 @@ def update_dhol_fields(N: ti.i32):
 def apply_acoustic_shell(membrane_signal, fs, mat_properties, note_hz, articulation, strike_force=1.0, autotune_shell=False, ring_mod=0.0, body_damping=0.0):
     E_long = mat_properties.get("E_long", 10.0)
     density = mat_properties.get("density", 0.5)
-    loss = max(0.0001, mat_properties.get("loss_factor", 0.02))
+    loss_mat = max(0.0001, mat_properties.get("loss_factor", 0.02))
+    thickness = mat_properties.get("base_thickness", 0.004)
     
+    # 1. Физическая скорость звука в материале стенки
     v_sound = np.sqrt((E_long * 1e9) / (density * 1000.0))
     f_helmholtz = np.clip(note_hz * 1.0, 40.0, 150.0)
     
-    base_shell = np.clip(v_sound * 0.06, 150.0, 4500.0)
+    # Зависимость изгибных мод кадушки от толщины стенки h
+    base_shell = np.clip(v_sound * 0.05 * ((thickness / 0.004) ** 0.3), 150.0, 4500.0)
     if autotune_shell and note_hz > 0:
         ratio = base_shell / note_hz
         consonant_multipliers = [1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 6.0, 8.0]
@@ -350,40 +353,51 @@ def apply_acoustic_shell(membrane_signal, fs, mat_properties, note_hz, articulat
     
     freqs = [f_helmholtz, base_shell, base_shell * 1.61, base_shell * 2.3, base_shell * 3.5, base_shell * 5.4, base_shell * 8.1]
     
-    dynamic_q_scale = 0.76 + 0.24 * (strike_force ** 0.5)
-    base_q = (0.85 / loss) * dynamic_q_scale
+    # 2. Модель стыковых потерь Лютье (Boundary-Loss Model)
+    # Потери на стыках и креплениях прижимного обода (типичное значение 0.015)
+    eta_boundary = 0.015
     
-    q_helmholtz = np.clip(base_q * 2.2, 30.0, 110.0) 
+    # С ростом ring_mod лютье сводит внешние потери к нулю, стремясь к идеальной развязке
+    total_loss = loss_mat + eta_boundary * (1.0 - ring_mod)
+    
+    dynamic_q_scale = 0.76 + 0.24 * (strike_force ** 0.5)
+    
+    # Базовое значение Q, жестко ограниченное общими потерями системы
+    base_q = (0.85 / total_loss) * dynamic_q_scale
+    
+    q_helmholtz = np.clip(base_q * 2.2, 30.0, 110.0)
     q_factors = [q_helmholtz, base_q, base_q * 1.1, base_q * 1.3, base_q * 1.5, base_q * 1.8, base_q * 2.0]
     
-    if ring_mod > 0:
-        q_factors[0] *= (1.0 + ring_mod * 1.5)
-        boost_mult = 3.5 if articulation in ["tek_A", "tek_B"] else 1.8
-        q_factors[1] *= (1.0 + ring_mod * boost_mult * (strike_force ** 1.2))
-        q_factors[2] *= (1.0 + ring_mod * boost_mult * (strike_force ** 1.2))
+    # Дополнительная коррекция добротности для ярких артикуляций стороны B
+    if ring_mod > 0 and articulation in ["tek_A", "tek_B"]:
+        boost_mult = 1.5
+        q_factors[1] *= (1.0 + ring_mod * boost_mult)
+        q_factors[2] *= (1.0 + ring_mod * boost_mult)
     
-    stiffness_ratio = np.clip(E_long / 10.0, 0.1, 30.0)
-    shell_gain = 0.06 / np.sqrt(stiffness_ratio)
-    gains = [0.35, shell_gain, shell_gain*0.7, shell_gain*0.5, shell_gain*0.3, shell_gain*0.15, shell_gain*0.08]
+    # 3. Эффективность излучения звука (Radiation Efficiency) жестких кадушек
+    radiation_efficiency = np.sqrt(E_long / density)
+    shell_gain = 0.08 * (radiation_efficiency ** 0.25)
     
+    # Инициализация списка gains (переменная теперь гарантированно объявлена до использования!)
+    gains = [0.35, shell_gain, shell_gain * 0.7, shell_gain * 0.5, shell_gain * 0.3, shell_gain * 0.15, shell_gain * 0.08]
+    
+    # Корректировка усиления под артикуляции
     if articulation == "tek_A":
-        q_factors[1] *= 1.5
-        q_factors[2] *= 1.8
+        q_factors[1] *= 1.2
+        q_factors[2] *= 1.4
         gains[0] *= 0.65 
         gains[1] *= 0.85 
     elif articulation == "tek_B":
-        q_factors[1] *= 1.5
-        q_factors[2] *= 1.7
+        q_factors[1] *= 1.2
+        q_factors[2] *= 1.3
         gains[0] *= 0.35 
         gains[1] *= 0.75 
         gains[2] *= 0.70 
     elif articulation == "chapa":
         gains[0] *= 0.65      
         q_factors[0] *= 0.25  
-        
-        q_factors[1] *= 1.8
+        q_factors[1] *= 1.5
         q_factors[2] *= 1.2
-        
         gains[1] *= 1.60  
         gains[2] *= 1.40  
         gains[3] *= 1.50  
@@ -429,10 +443,9 @@ def apply_acoustic_shell(membrane_signal, fs, mat_properties, note_hz, articulat
             a = [1.0, -2.0 * np.cos(w0) / a0, (1.0 - alpha) / a0]
             shell_output += lfilter(b, a, membrane_signal) * g
             
-    # === [NEW] Динамическое демпфирование телом (ADSR-огибающая поглощения) ===
+    # Динамическое демпфирование корпуса телом (ADSR-огибающая поглощения)
     if body_damping > 0.0:
         t_arr = np.arange(len(shell_output)) / fs
-        
         tail_tau = np.clip(1.5 * np.exp(-body_damping * 3.5), 0.06, 1.5)
         tail_env = np.exp(-t_arr / tail_tau)
         
@@ -768,7 +781,7 @@ def apply_body_convolution(input_signal, ir_signal, fs, mix=0.35):
     return output
 
 def apply_internal_bells(membrane_signal, acceleration_signal, fs, material_name="brass", 
-                         mix=0.15, rr_index=1, strike_force=1.0, bell_peak_ratio=1.0):
+                         mix=0.15, rr_index=1, strike_force=1.0, bell_peak_ratio=1.0, ring_mod=0.0):
     """
     МАКСИМАЛЬНО ЖИВАЯ МОДЕЛЬ КОЛОКОЛЬЧИКОВ.
     Сбалансированная: жесткий transient-gate защищает атаку «Тэка», 
@@ -813,8 +826,12 @@ def apply_internal_bells(membrane_signal, acceleration_signal, fs, material_name
              0.20 * (kinetic_energy ** 0.8)]
     
     base_q = 0.5 / max(1e-5, loss)
-    sustain_scale = (0.15 + 0.85 * kinetic_energy) * (0.3 + 0.7 * mix)
-    q_bell = np.clip(base_q * sustain_scale, 5.0, 400.0)
+    
+    # [ПРАВКА] Взаимодействие бубенцов с резонансом кадушки (Luthier Ring)
+    # Если корпус настроен петь (высокий ring_mod), внутренние бубенцы резонируют дольше
+    luthier_bell_boost = 1.0 + (ring_mod * 2.5 * (0.02 / loss) ** 0.2)
+    sustain_scale = (0.15 + 0.85 * kinetic_energy) * (0.3 + 0.7 * mix) * luthier_bell_boost
+    q_bell = np.clip(base_q * sustain_scale, 5.0, 600.0) # Повышен лимит добротности для металла
     
     abs_acc = np.abs(acceleration_signal)
     main_excitation = np.zeros_like(abs_acc)
@@ -1711,7 +1728,8 @@ def synthesize_dhol_strike(
             mix=dynamic_mix,
             rr_index=rr_index,
             strike_force=strike_force,
-            bell_peak_ratio=1.0
+            bell_peak_ratio=1.0,
+            ring_mod=ring_mod
         )
     
     if body_polish_mix > 0.0:

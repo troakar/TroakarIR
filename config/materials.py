@@ -444,26 +444,29 @@ MATERIAL_PHYSICS = {
     # ----------------------------------------------------------------------
     #  ДРЕВНИЕ И САКРАЛЬНЫЕ МЕТАЛЛЫ И СПЛАВЫ (METALS)
     # ----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
+    #  ДРЕВНИЕ И САКРАЛЬНЫЕ МЕТАЛЛЫ И СПЛАВЫ (METALS) — ОПТИМИЗИРОВАНО
+    # ----------------------------------------------------------------------
     "church_bell_bronze": {
         "category": "metal",
         "name": "Колокольная бронза (Cu 78%, Sn 22%)",
-        "description": "Сакральный сплав церковных колоколов. Чистый, пронзительный, невероятно долгий звон с лёгкой горчинкой оловянной патины, уносящийся в небо.",
+        "description": "Сакральный сплав. Чистый, пронзительный, невероятно долгий звон. Физика оптимизирована для ультра-высокой добротности.",
         "density": 8.70, "E_long": 103.0, "E_trans": 103.0, "poisson": 0.35,
-        "loss_factor": 0.0003, "visco_gamma": 8.0e-7, "base_thickness": 0.006,
+        "loss_factor": 0.0003, "visco_gamma": 8.0e-7, "base_thickness": 0.0055, # Слегка тоньше для полетного спектра
         "granular": {
-            "enabled": True, "intensity": 0.3, "particle_count": 2500, "density": 1.0,
+            "enabled": True, "intensity": 0.25, "particle_count": 2500, "density": 1.0,
             "freq_range": [4000.0, 14000.0], "duration_range": [0.001, 0.004], "env_power": 1.9
         },
         "fibrous": {"enabled": False}, "fluid": {"enabled": False},
-        "tactile_profile": {"fibrousness": 0.0, "fluidity": 0.0, "granularity": 0.3, "brittleness": 0.2},
+        "tactile_profile": {"fibrousness": 0.0, "fluidity": 0.0, "granularity": 0.2, "brittleness": 0.2},
         "inclusions": []
     },
     "antique_brass_orichalcum": {
         "category": "metal",
         "name": "Античная латунь (Орихалк)",
-        "description": "Исторический сплав меди и цинка, известный с античности. Теплый, благовоспитанный, чуть глуховатый звон с оттенком древнего золота.",
+        "description": "Теплый, благородный, чуть глуховатый звон сплава меди и цинка с бархатным затуханием.",
         "density": 8.45, "E_long": 95.0, "E_trans": 95.0, "poisson": 0.36,
-        "loss_factor": 0.0018, "visco_gamma": 2.5e-6, "base_thickness": 0.005,
+        "loss_factor": 0.0014, "visco_gamma": 2.2e-6, "base_thickness": 0.006, # Плотная матовая стенка
         "granular": {"enabled": False}, "fibrous": {"enabled": False}, "fluid": {"enabled": False},
         "tactile_profile": {"fibrousness": 0.0, "fluidity": 0.0, "granularity": 0.0, "brittleness": 0.0},
         "inclusions": [
@@ -481,9 +484,9 @@ MATERIAL_PHYSICS = {
     "hepatizon_black_bronze": {
         "category": "metal",
         "name": "Гепатизон (Чёрная бронза)",
-        "description": "Редчайший античный сплав с добавлением золота и серебра, покрытый чёрной патиной. Глухой, мистический, густой низ с хрупкими высокими искрами.",
+        "description": "Редчайший античный сплав с добавлением золота и серебра. Матовый, мистический, темный низ с хрупкими искрами.",
         "density": 8.85, "E_long": 88.0, "E_trans": 88.0, "poisson": 0.34,
-        "loss_factor": 0.0045, "visco_gamma": 1.2e-6, "base_thickness": 0.006,
+        "loss_factor": 0.0035, "visco_gamma": 1.1e-6, "base_thickness": 0.0065, # Оптимальная толщина для плотной моды
         "granular": {
             "enabled": True, "intensity": 0.65, "particle_count": 5000, "density": 1.4,
             "freq_range": [3500.0, 12000.0], "duration_range": [0.001, 0.005], "env_power": 1.5
@@ -495,9 +498,9 @@ MATERIAL_PHYSICS = {
     "damascus_steel": {
         "category": "metal",
         "name": "Дамасская сталь (Сварной булат)",
-        "description": "Слоистый композитный металл древних клинков. Рождает многослойный, волокнистый звон с постоянно меняющимся тембром и лёгкой шероховатостью узора.",
+        "description": "Слоистый композитный металл древних клинков. Рождает многослойный, текстурированный металлический звон.",
         "density": 7.85, "E_long": 195.0, "E_trans": 185.0, "poisson": 0.29,
-        "loss_factor": 0.0025, "visco_gamma": 1.5e-6, "base_thickness": 0.005,
+        "loss_factor": 0.0015, "visco_gamma": 1.2e-6, "base_thickness": 0.005,
         "granular": {"enabled": False},
         "fibrous": {"enabled": True, "intensity": 0.7, "tension": 2.3, "tear_freq": 21.0},
         "fluid": {"enabled": False},
